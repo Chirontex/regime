@@ -47,6 +47,8 @@ final class Main extends PointOfEntry
         );
 
         new Forms($this->path, $this->url, $forms_container);
+
+        $this->submenuRemove();
         
         return $this;
 
@@ -66,15 +68,30 @@ final class Main extends PointOfEntry
             add_menu_page(
                 esc_html__('Regime', 'regime-ru_RU'),
                 esc_html__('Regime', 'regime-ru_RU'),
-                8,
+                100,
                 'regime',
-                function() {
-
-                    echo 'test';
-
-                },
+                function() {},
                 $this->url.$this->icons_path.'airplay.svg'
             );
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Remove main page from its own submenu.
+     * @since 0.0.7
+     * 
+     * @return $this
+     */
+    protected function submenuRemove() : self
+    {
+
+        add_action('admin_menu', function() {
+
+            remove_submenu_page('regime', 'regime');
 
         });
 
