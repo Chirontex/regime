@@ -147,11 +147,11 @@ class AdminMenuPage
     }
 
     /**
-     * Set icon file path.
+     * Set icon file.
      * @since 0.0.5
      * 
      * @param string $icon
-     * Icon file path.
+     * Icon file URL.
      * 
      * @return $this
      * 

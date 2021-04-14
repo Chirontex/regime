@@ -4,6 +4,8 @@
  */
 namespace Regime;
 
+use Regime\Containers\AdminMenuPage;
+
 /**
  * @final
  * Main POE.
@@ -20,6 +22,13 @@ final class Main extends PointOfEntry
     protected $admin_pages_dir;
 
     /**
+     * @var string $icons_path
+     * Icon universal dir/root relative path.
+     * @since 0.0.6
+     */
+    protected $icons_path = 'misc/icons/';
+
+    /**
      * @since 0.0.3
      */
     protected function init() : self
@@ -28,6 +37,16 @@ final class Main extends PointOfEntry
         $this->admin_pages_dir = $this->path.'admin/';
 
         $this->menuAdd();
+
+        $forms_container = new AdminMenuPage(
+            $this->admin_pages_dir.'forms.php',
+            file_get_contents($this->path.$this->icons_path.'grid.svg').
+                ' '.esc_html__('Формы', 'regime-ru_RU'),
+            esc_html__('Формы', 'regime-ru_RU'),
+            'regime-forms'
+        );
+
+        new Forms($this->path, $this->url, $forms_container);
         
         return $this;
 
@@ -54,7 +73,7 @@ final class Main extends PointOfEntry
                     echo 'test';
 
                 },
-                $this->url.'misc/icons/airplay.svg'
+                $this->url.$this->icons_path.'airplay.svg'
             );
 
         });

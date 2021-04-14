@@ -50,7 +50,9 @@ abstract class AdminPage extends PointOfEntry
 
         parent::__construct($path, $url);
 
-        $this->menuAddPage();
+        $this
+            ->menuAddPage()
+            ->bootstrapAdd();
 
     }
 
@@ -76,6 +78,41 @@ abstract class AdminPage extends PointOfEntry
                     require_once $this->container->viewGet();
 
                 }
+            );
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Plug Bootstrap to the page.
+     * @since 0.0.6
+     * 
+     * @return $this
+     */
+    protected function bootstrapAdd() : self
+    {
+
+        add_action('admin_enqueue_scripts', function() {
+
+            wp_enqueue_style(
+                'bootstrap-min',
+                file_exists($this->path.'css/bootstrap-5.0.0-beta3/bootstrap.min.css') ?
+                    $this->url.'css/bootstrap-5.0.0-beta3/bootstrap.min.css' :
+                    'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css',
+                [],
+                '5.0.0-beta3'
+            );
+
+            wp_enqueue_script(
+                'bootstrap-min',
+                file_exists($this->path.'js/bootstrap-5.0.0-beta3/bootstrap.bundle.min.js') ?
+                    $this->url.'js/bootstrap-5.0.0-beta3/bootstrap.bundle.min.js' :
+                    'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js',
+                [],
+                '5.0.0-beta3'
             );
 
         });
