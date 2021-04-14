@@ -4,6 +4,8 @@
  */
 namespace Regime;
 
+use Regime\Containers\AdminMenuPage;
+
 /**
  * @abstract
  * Admin page abstract POE class.
@@ -23,11 +25,11 @@ abstract class AdminPage extends PointOfEntry
     ];
 
     /**
-     * @var string $view
-     * Page view file.
-     * @since 0.0.4
+     * @var \Regime\Containers\AdminMenuPage $container
+     * Admin menu page props container obj.
+     * @since 0.0.5
      */
-    public $view;
+    protected $container;
 
     /**
      * @since 0.0.4
@@ -41,12 +43,44 @@ abstract class AdminPage extends PointOfEntry
      * @param string $view
      * Page view file.
      */
-    public function __construct(string $path, string $url, string $view)
+    public function __construct(string $path, string $url, AdminMenuPage $container)
     {
         
-        $this->$view = $view;
+        $this->container = $container;
 
         parent::__construct($path, $url);
+
+        $this->menuAddPage();
+
+    }
+
+    /**
+     * Add page to menu.
+     * @since 0.0.4
+     * 
+     * @return $this
+     */
+    protected function menuAddPage() : self
+    {
+
+        add_action('admin_menu', function() {
+
+            add_submenu_page(
+                'regime',
+                $this->container->pageTitleGet(),
+                $this->container->menuTitleGet(),
+                8,
+                $this->container->slugGet(),
+                function() {
+
+                    require_once $this->container->viewGet();
+
+                }
+            );
+
+        });
+
+        return $this;
 
     }
 
