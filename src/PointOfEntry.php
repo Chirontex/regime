@@ -55,6 +55,21 @@ abstract class PointOfEntry
 
         $this->url = $url;
 
+        $this->init();
+
+    }
+
+    /**
+     * Fires after object construction.
+     * @since 0.0.3
+     * 
+     * @return $this
+     */
+    protected function init() : self
+    {
+
+        return $this;
+
     }
 
 }

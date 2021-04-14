@@ -12,6 +12,14 @@ namespace Regime;
 final class Main extends PointOfEntry
 {
 
+    /**
+     * @since 0.0.3
+     */
+    protected function init() : self
+    {
+        
+        return $this;
 
+    }
 
 }
