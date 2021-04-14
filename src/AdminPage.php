@@ -23,6 +23,34 @@ abstract class AdminPage extends PointOfEntry
     ];
 
     /**
+     * @var string $view
+     * Page view file.
+     * @since 0.0.4
+     */
+    public $view;
+
+    /**
+     * @since 0.0.4
+     * 
+     * @param string $path
+     * Plugin root directory.
+     * 
+     * @param string $url
+     * Plugin root directory as URL.
+     * 
+     * @param string $view
+     * Page view file.
+     */
+    public function __construct(string $path, string $url, string $view)
+    {
+        
+        $this->$view = $view;
+
+        parent::__construct($path, $url);
+
+    }
+
+    /**
      * Output notice on admin page.
      * @since 0.0.3
      * 
