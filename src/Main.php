@@ -4,9 +4,14 @@
  */
 namespace Regime;
 
-final class Main
+/**
+ * @final
+ * Main POE.
+ * @since 0.0.2
+ */
+final class Main extends PointOfEntry
 {
 
-    
+
 
 }
