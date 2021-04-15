@@ -75,6 +75,9 @@ abstract class AdminPage extends PointOfEntry
                 $this->container->slugGet(),
                 function() {
 
+                    $path = $this->path;
+                    $url = $this->url;
+
                     do_action('regime-admin-page-notice');
 
                     require_once $this->container->viewGet();
@@ -150,7 +153,7 @@ abstract class AdminPage extends PointOfEntry
             ob_start();
 
 ?>
-<div class="notice notice-<?= esc_attr_e($this->notice_container['type'], 'regime-ru_RU') ?> is-dismissible" style="max-width: 500px; margin: 1rem auto;">
+<div class="notice notice-<?= htmlspecialchars($this->notice_container['type']) ?> is-dismissible" style="max-width: 500px; margin: 1rem auto;">
     <p style="text-align: center;"><?= $this->notice_container['text'] ?></p>
 </div>
 <?php
