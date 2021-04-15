@@ -5,6 +5,6 @@
 if (!defined('ABSPATH')) die;
 
 ?>
-<div>
-    <h1><?php esc_html_e('Управление формами', 'regime-ru_RU') ?></h1>
+<div class="container-fluid">
+    <h1 class="h3 text-center"><?php esc_html_e('Управление формами', 'regime-ru_RU') ?></h1>
 </div>
