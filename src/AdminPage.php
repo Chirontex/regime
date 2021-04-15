@@ -50,9 +50,10 @@ abstract class AdminPage extends PointOfEntry
 
         parent::__construct($path, $url);
 
-        $this
-            ->menuAddPage()
-            ->bootstrapAdd();
+        $this->menuAddPage();
+        
+        if ($_GET['page'] ===
+            $this->container->slugGet()) $this->bootstrapAdd();
 
     }
 

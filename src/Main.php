@@ -36,19 +36,14 @@ final class Main extends PointOfEntry
 
         $this->admin_pages_dir = $this->path.'admin/';
 
-        $this->menuAdd();
+        if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false) {
 
-        $forms_container = new AdminMenuPage(
-            $this->admin_pages_dir.'forms.php',
-            file_get_contents($this->path.$this->icons_path.'grid.svg').
-                ' '.esc_html__('Формы', 'regime-ru_RU'),
-            esc_html__('Формы', 'regime-ru_RU'),
-            'regime-forms'
-        );
+            $this
+                ->menuAdd()
+                ->formsInit()
+                ->submenuRemove();
 
-        new Forms($this->path, $this->url, $forms_container);
-
-        $this->submenuRemove();
+        }
         
         return $this;
 
@@ -75,6 +70,48 @@ final class Main extends PointOfEntry
             );
 
         });
+
+        return $this;
+
+    }
+
+    /**
+     * Initialize forms page.
+     * @since 0.1.0
+     * 
+     * @return $this
+     */
+    protected function formsInit() : self
+    {
+
+        $view = 'forms.php';
+
+        $page_title = esc_html__('Формы', 'regime-ru_RU');
+
+        if (isset($_GET['faction'])) {
+
+            if ($_GET['faction'] === 'edit') {
+
+                $view = 'form-edit.php';
+
+                $page_title = esc_html__('Новая форма | Regime', 'regime-ru_RU');
+
+                if (isset($_GET['fid'])) $page_title = empty($_GET['fid']) ?
+                    $page_title : esc_html__('Редактирование формы | Regime', 'regime-ru_RU');
+
+            }
+
+        }
+
+        $forms_container = new AdminMenuPage(
+            $this->admin_pages_dir.$view,
+            file_get_contents($this->path.$this->icons_path.'grid.svg').
+                ' '.esc_html__('Формы', 'regime-ru_RU'),
+            $page_title,
+            'regime-forms'
+        );
+
+        new Forms($this->path, $this->url, $forms_container);
 
         return $this;
 

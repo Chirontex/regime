@@ -16,9 +16,9 @@ if (!defined('ABSPATH')) die;
             ?>
         </button>
         <ul class="dropdown-menu" aria-labelledby="regime-form-create">
-            <li><a href="#" class="dropdown-item"><?= esc_html__('регистрации', 'regime-ru_RU') ?></a></li>
-            <li><a href="#" class="dropdown-item"><?= esc_html__('авторизации', 'regime-ru_RU') ?></a></li>
-            <li><a href="#" class="dropdown-item"><?= esc_html__('профиля', 'regime-ru_RU') ?></a></li>
+            <li><a href="#" class="dropdown-item"><?= esc_html__('Регистрация', 'regime-ru_RU') ?></a></li>
+            <li><a href="#" class="dropdown-item"><?= esc_html__('Авторизация', 'regime-ru_RU') ?></a></li>
+            <li><a href="#" class="dropdown-item"><?= esc_html__('Профиль', 'regime-ru_RU') ?></a></li>
         </ul>
     </div>
 </div>
