@@ -1,0 +1,4 @@
+/**
+ * @package Regime
+ */
+document.regimeFormFields = {};

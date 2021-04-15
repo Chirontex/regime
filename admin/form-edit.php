@@ -80,7 +80,11 @@ else esc_html_e('Редактирование формы', 'regime');
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-8">
-        
+            <table class="table table-sm table-hover">
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
