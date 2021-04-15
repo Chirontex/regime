@@ -61,8 +61,8 @@ final class Main extends PointOfEntry
         add_action('admin_menu', function() {
 
             add_menu_page(
-                esc_html__('Regime', 'regime-ru_RU'),
-                esc_html__('Regime', 'regime-ru_RU'),
+                esc_html__('Regime', 'regime'),
+                esc_html__('Regime', 'regime'),
                 100,
                 'regime',
                 function() {},
@@ -86,7 +86,7 @@ final class Main extends PointOfEntry
 
         $view = 'forms.php';
 
-        $page_title = esc_html__('Формы', 'regime-ru_RU');
+        $page_title = esc_html__('Формы', 'regime');
 
         if (isset($_GET['faction'])) {
 
@@ -94,10 +94,10 @@ final class Main extends PointOfEntry
 
                 $view = 'form-edit.php';
 
-                $page_title = esc_html__('Новая форма | Regime', 'regime-ru_RU');
+                $page_title = esc_html__('Новая форма | Regime', 'regime');
 
                 if (isset($_GET['fid'])) $page_title = empty($_GET['fid']) ?
-                    $page_title : esc_html__('Редактирование формы | Regime', 'regime-ru_RU');
+                    $page_title : esc_html__('Редактирование формы | Regime', 'regime');
 
             }
 
@@ -106,7 +106,7 @@ final class Main extends PointOfEntry
         $forms_container = new AdminMenuPage(
             $this->admin_pages_dir.$view,
             file_get_contents($this->path.$this->icons_path.'grid.svg').
-                ' '.esc_html__('Формы', 'regime-ru_RU'),
+                ' '.esc_html__('Формы', 'regime'),
             $page_title,
             'regime-forms'
         );
