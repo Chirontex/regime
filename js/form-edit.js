@@ -6,8 +6,6 @@ document.regimeFormEdit = {
     fields: {},
     methods: {
         fieldAdd: (type, color, placeholder) => {
-            const row = document.createElement('tr');
-
             let fieldId = '';
 
             for (let i = 1; i != undefined; i++)
@@ -17,19 +15,6 @@ document.regimeFormEdit = {
                 if (document.regimeFormEdit.fields[fieldId] ==
                     undefined) break;
             }
-
-            row.setAttribute('id', fieldId);
-            row.setAttribute('class', 'table-'+color);
-
-            const cell = document.createElement('td');
-
-            cell.innerHTML = placeholder;
-            
-            if (type != 'reset') cell.innerHTML += ':';
-
-            row.appendChild(cell);
-
-            document.regimeFormEdit.form.appendChild(row);
 
             document.regimeFormEdit.fields[fieldId] = {};
 
@@ -43,15 +28,37 @@ document.regimeFormEdit = {
             }
 
             if (type != 'checkbox' &&
-                type != 'radio' &&
-                type != 'select') field.placeholder = placeholder;
-
-            if (type != 'checkbox' &&
-                type != 'radio' &&
-                type != 'reset') field.value = '';
-
+            type != 'radio' &&
+            type != 'reset') field.value = '';
+            
             if (type == 'checkbox' ||
-                type == 'radio') field.checked = false;
+            type == 'radio') field.checked = false;
+            
+            field.placeholder = placeholder;
+
+            document.regimeFormEdit.methods.fieldRowRender(fieldId, color);
+        },
+        fieldRowRender: (fieldId, color) => {
+            let type = fieldId.split('_');
+
+            type = type[0];
+
+            const row = document.createElement('tr');
+
+            row.setAttribute('id', fieldId);
+            row.setAttribute('class', 'table-'+color);
+            row.setAttribute('role', 'button');
+
+            const cell = document.createElement('td');
+
+            cell.innerHTML = document
+                .regimeFormEdit.fields[fieldId].placeholder;
+            
+            if (type != 'reset') cell.innerHTML += ':';
+
+            row.appendChild(cell);
+
+            document.regimeFormEdit.form.appendChild(row);
         }
     }
 };
