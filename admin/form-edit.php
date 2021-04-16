@@ -34,7 +34,7 @@ else esc_html_e('Редактирование формы', 'regime');
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
             <h4 class="text-center mb-5">
                 <?= esc_html__('Добавление полей', 'regime') ?>
             </h4>
@@ -79,11 +79,22 @@ else esc_html_e('Редактирование формы', 'regime');
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-7">
             <h4 class="text-center mb-5">
                 <?= esc_html__('Поля формы', 'regime') ?>
             </h4>
             <table class="table table-sm table-hover mb-3">
+                <thead>
+                    <tr>
+                        <th><?= esc_html__('Плейсхолдер', 'regime') ?></th>
+                        <th><?= esc_html__('Лейбл', 'regime') ?></th>
+                        <th><?= esc_html__('Ключ', 'regime') ?></th>
+                        <th><?= esc_html__('Дефолтное значение', 'regime') ?></th>
+                        <th><?= esc_html__('Обязательное', 'regime') ?></th>
+                        <th><?= esc_html__('Отмечено', 'regime') ?></th>
+                        <th></th>
+                    </tr>
+                </thead>
                 <tbody id="regimeFormFields">
 
                 </tbody>

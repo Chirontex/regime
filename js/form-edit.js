@@ -49,16 +49,42 @@ document.regimeFormEdit = {
             row.setAttribute('class', 'table-'+color);
             row.setAttribute('role', 'button');
 
-            const cell = document.createElement('td');
+            const props = [
+                'placeholder',
+                'label',
+                'key',
+                'value',
+                'required',
+                'checked'
+            ];
 
-            cell.innerHTML = document
-                .regimeFormEdit.fields[fieldId].placeholder;
-            
-            if (type != 'reset') cell.innerHTML += ':';
+            let cell;
 
-            row.appendChild(cell);
+            for (let i = 0; i < props.length; i++)
+            {
+                cell = document
+                    .regimeFormEdit.methods.propCellRender(fieldId, props[i]);
+
+                row.appendChild(cell);
+            }
 
             document.regimeFormEdit.form.appendChild(row);
+        },
+        propCellRender: (fieldId, prop) => {
+            const field = document.regimeFormEdit.fields[fieldId];
+
+            const cell = document.createElement('td');
+            cell.setAttribute('id', fieldId+'_'+prop);
+
+            if (field[prop] == undefined) cell.innerHTML = '—';
+            else
+            {
+                if (typeof field[prop] ==
+                    'string') cell.innerHTML = field[prop];
+                else cell.innerHTML = field[prop] == true ? 'Да' : 'Нет';
+            }
+
+            return cell;
         }
     }
 };
