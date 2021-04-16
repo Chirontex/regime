@@ -23,13 +23,35 @@ document.regimeFormEdit = {
 
             const cell = document.createElement('td');
 
-            cell.innerHTML = placeholder+':';
+            cell.innerHTML = placeholder;
+            
+            if (type != 'reset') cell.innerHTML += ':';
 
             row.appendChild(cell);
 
             document.regimeFormEdit.form.appendChild(row);
 
             document.regimeFormEdit.fields[fieldId] = {};
+
+            const field = document.regimeFormEdit.fields[fieldId];
+
+            if (type != 'reset')
+            {
+                field.key = '';
+                field.label = '';
+                field.required = true;
+            }
+
+            if (type != 'checkbox' &&
+                type != 'radio' &&
+                type != 'select') field.placeholder = placeholder;
+
+            if (type != 'checkbox' &&
+                type != 'radio' &&
+                type != 'reset') field.value = '';
+
+            if (type == 'checkbox' ||
+                type == 'radio') field.checked = false;
         }
     }
 };
