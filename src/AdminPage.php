@@ -40,8 +40,8 @@ abstract class AdminPage extends PointOfEntry
      * @param string $url
      * Plugin root directory as URL.
      * 
-     * @param string $view
-     * Page view file.
+     * @param \Regime\Containers\AdminMenuPage $container
+     * Admin menu page props container obj.
      */
     public function __construct(string $path, string $url, AdminMenuPage $container)
     {
