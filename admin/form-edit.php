@@ -90,8 +90,8 @@ else esc_html_e('Редактирование формы', 'regime');
                         <th><?= esc_html__('Лейбл', 'regime') ?></th>
                         <th><?= esc_html__('Ключ', 'regime') ?></th>
                         <th><?= esc_html__('Дефолтное значение', 'regime') ?></th>
-                        <th><?= esc_html__('Обязательное', 'regime') ?></th>
                         <th><?= esc_html__('Отмечено', 'regime') ?></th>
+                        <th><?= esc_html__('Обязательное', 'regime') ?></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -99,6 +99,71 @@ else esc_html_e('Редактирование формы', 'regime');
 
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div id="regimeFieldEditingModalTrigger" style="display: none;" data-bs-toggle="modal" data-bs-target="#regimeFieldEditingModal"></div>
+    <div class="modal fade" id="regimeFieldEditingModal" tabindex="-1" aria-labelledby="regimeFieldEditingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="regimeFieldEditingModalLabel">
+                        <?= esc_html__('Редактирование поля', 'regime') ?>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?= esc_attr__('Закрыть', 'regime') ?>"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="regimeFieldEdit_fieldId_block" hidden="true"></div>
+                    <div id="regimeFieldEdit_placeholder_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_placeholder" class="form-label">
+                            <?= esc_html__('Плейсхолдер:', 'regime') ?>
+                        </label>
+                    </div>
+                    <div id="regimeFieldEdit_label_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_label" class="form-label">
+                            <?= esc_html__('Лейбл:', 'regime') ?>
+                        </label>
+                    </div>
+                    <div id="regimeFieldEdit_key_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_key" class="form-label">
+                            <?= esc_html__('Ключ:', 'regime') ?>
+                        </label>
+                    </div>
+                    <div id="regimeFieldEdit_value_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_value" class="form-label">
+                            <?= esc_html__('Значение по умолчанию:', 'regime') ?>
+                        </label>
+                    </div>
+                    <div id="regimeFieldEdit_options_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_options" class="form-label">
+                            <?= esc_html__('Возможные значения:', 'regime') ?>
+                        </label>
+                    </div>
+                    <div id="regimeFieldEdit_multiple_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_multiple">
+                            <?= esc_html__('Мультивыбор', 'regime') ?>
+                        </label>
+                    </div>
+                    <div id="regimeFieldEdit_strict_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_strict">
+                            <?= esc_html__('Строгое', 'regime') ?>
+                        </label>
+                    </div>
+                    <div id="regimeFieldEdit_checked_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_checked">
+                            <?= esc_html__('Отмечено', 'regime') ?>
+                        </label>
+                    </div>
+                    <div id="regimeFieldEdit_required_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_required">
+                            <?= esc_html__('Обязательное', 'regime') ?>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="button button-secondary mx-1" data-bs-dismiss="modal"><?= esc_html__('Закрыть', 'regime') ?></button>
+                    <button type="button" class="button button-primary mx-1"><?= esc_html__('Сохранить изменения', 'regime') ?></button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
