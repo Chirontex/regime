@@ -65,11 +65,6 @@ document.regimeFormEdit = {
             row.setAttribute('id', fieldId);
             row.setAttribute('class', 'table-'+color);
             row.setAttribute('role', 'button');
-            row.setAttribute(
-                'onclick',
-                'document.regimeFormEdit.methods.fieldEditingOpen(\''
-                    +fieldId+'\');'
-            );
 
             document.regimeFormEdit.form.appendChild(row);
 
@@ -123,6 +118,11 @@ document.regimeFormEdit = {
 
             const cell = document.createElement('td');
             cell.setAttribute('id', fieldId+'_'+prop);
+            cell.setAttribute(
+                'onclick',
+                'document.regimeFormEdit.methods.fieldEditingOpen(\''
+                    +fieldId+'\');'
+            );
 
             if (field[prop] == undefined) cell.innerHTML = '—';
             else
