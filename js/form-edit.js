@@ -33,7 +33,7 @@ document.regimeFormEdit = {
 
             const field = document.regimeFormEdit.fields[fieldId];
 
-            field.number = ++document.regimeFormEdit.fieldsCount;
+            field.position = ++document.regimeFormEdit.fieldsCount;
 
             if (type != 'reset')
             {
@@ -98,6 +98,21 @@ document.regimeFormEdit = {
 
                 row.appendChild(cell);
             }
+
+            cell = document.createElement('td');
+
+            const button = document.createElement('button');
+            button.setAttribute('class', 'btn btn-sm btn-danger');
+            button.setAttribute('style', 'padding: 2px; line-height: 16px;');
+            button.setAttribute(
+                'onclick',
+                'document.regimeFormEdit.methods.fieldDelete(\''+fieldId+'\');'
+            );
+            button.innerHTML = document.regimeTexts.deleteButton;
+
+            cell.appendChild(button);
+
+            row.appendChild(cell);
         },
         propCellRender: (fieldId, prop) => {
             const field = document.regimeFormEdit.fields[fieldId];
@@ -207,7 +222,7 @@ document.regimeFormEdit = {
 
             if (prop == 'options') input.innerHTML = value;
         },
-        fieldSave: (toastText) => {
+        fieldSave: () => {
             const fieldId = document
                 .getElementById('regimeFieldEdit_fieldId')
                 .getAttribute('value');
@@ -254,7 +269,22 @@ document.regimeFormEdit = {
             document
                 .regimeFormEdit.methods.fieldRowRender(fieldId);
 
-            document.regimeFormEdit.methods.toast(toastText, 'success');            
+            document.regimeFormEdit.methods.toast(
+                document.regimeTexts.fieldSaveSuccess,
+                'success'
+            );
+        },
+        fieldDelete: (fieldId) => {
+            const row = document.getElementById(fieldId);
+
+            row.parentNode.removeChild(row);
+
+            delete document.regimeFormEdit.fields[fieldId];
+
+            document.regimeFormEdit.methods.toast(
+                document.regimeTexts.fieldDeleteSuccess,
+                'success'
+            );
         },
         toast: (text, type) => {
             const toast = document.getElementById('regimeToast');

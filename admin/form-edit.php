@@ -161,7 +161,7 @@ else esc_html_e('Редактирование формы', 'regime');
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="button button-secondary mx-1" data-bs-dismiss="modal"><?= esc_html__('Закрыть', 'regime') ?></button>
-                    <button type="button" class="button button-primary mx-1" data-bs-dismiss="modal" onclick="document.regimeFormEdit.methods.fieldSave('<?= esc_attr__('Изменения поля сохранены!', 'regime') ?>');"><?= esc_html__('Сохранить изменения', 'regime') ?></button>
+                    <button type="button" class="button button-primary mx-1" data-bs-dismiss="modal" onclick="document.regimeFormEdit.methods.fieldSave();"><?= esc_html__('Сохранить изменения', 'regime') ?></button>
                 </div>
             </div>
         </div>
@@ -174,3 +174,10 @@ else esc_html_e('Редактирование формы', 'regime');
         </div>
     </div>
 </div>
+<script>
+document.regimeTexts = {
+    deleteButton: '<?= file_get_contents($path.'misc/icons/trash-2.svg') ?>',
+    fieldDeleteSuccess: '<?= esc_html__('Поле удалено!', 'regime') ?>',
+    fieldSaveSuccess: '<?= esc_html__('Изменения поля сохранены!', 'regime') ?>'
+};
+</script>
