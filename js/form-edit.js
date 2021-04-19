@@ -15,6 +15,7 @@ document.regimeFormEdit = {
         'checked',
         'required'
     ],
+    fieldsCount: 0,
     fields: {},
     methods: {
         fieldAdd: (type, color, placeholder) => {
@@ -31,6 +32,8 @@ document.regimeFormEdit = {
             document.regimeFormEdit.fields[fieldId] = {};
 
             const field = document.regimeFormEdit.fields[fieldId];
+
+            field.number = ++document.regimeFormEdit.fieldsCount;
 
             if (type != 'reset')
             {
@@ -130,7 +133,9 @@ document.regimeFormEdit = {
             document.getElementById('regimeFieldEdit_fieldId_block')
                 .appendChild(input);
 
-            methods.modalInputRender(fieldId, 'placeholder');
+            if (type != 'checkbox' &&
+                type != 'radio') methods
+                    .modalInputRender(fieldId, 'placeholder');
 
             if (type != 'reset')
             {
@@ -164,7 +169,7 @@ document.regimeFormEdit = {
 
             let value = field[prop];
 
-            if (prop == 'options') value = value.join('\n\r');
+            if (prop == 'options') value = value.join(';\r');
 
             const input = document.createElement(
                 prop == 'options' ? 'textarea' : 'input'
@@ -201,6 +206,53 @@ document.regimeFormEdit = {
             }
 
             if (prop == 'options') input.innerHTML = value;
+        },
+        fieldSave: () => {
+            const fieldId = document
+                .getElementById('regimeFieldEdit_fieldId')
+                .getAttribute('value');
+            
+            const field = document.regimeFormEdit.fields[fieldId];
+            
+            const fieldProps = document.regimeFormEdit.fieldProps;
+
+            let propInput;
+            let handledList;
+            let option;
+
+            for (let i = 0; i < fieldProps.length; i++)
+            {
+                propInput = document
+                    .getElementById('regimeFieldEdit_'+fieldProps[i]);
+
+                if (propInput != undefined)
+                {
+                    if (propInput.hasAttribute('type'))
+                    {
+                        if (propInput.getAttribute('type') ==
+                            'checkbox') field[fieldProps[i]] = propInput.checked;
+                        else field[fieldProps[i]] = propInput.value;
+                    }
+                    else
+                    {
+                        field[fieldProps[i]] = propInput.value.split(';');
+
+                        handledList = [];
+
+                        for (let p = 0; p < field[fieldProps[i]].length; p++)
+                        {
+                            option = field[fieldProps[i]][p].trim();
+
+                            if (option != '') handledList[p] = option;
+                        }
+
+                        field[fieldProps[i]] = handledList;
+                    }
+                }
+            }
+
+            document
+                .regimeFormEdit.methods.fieldRowRender(fieldId);
         }
     }
 };
