@@ -207,7 +207,7 @@ document.regimeFormEdit = {
 
             if (prop == 'options') input.innerHTML = value;
         },
-        fieldSave: () => {
+        fieldSave: (toastText) => {
             const fieldId = document
                 .getElementById('regimeFieldEdit_fieldId')
                 .getAttribute('value');
@@ -253,6 +253,18 @@ document.regimeFormEdit = {
 
             document
                 .regimeFormEdit.methods.fieldRowRender(fieldId);
+
+            document.regimeFormEdit.methods.toast(toastText, 'success');            
+        },
+        toast: (text, type) => {
+            const toast = document.getElementById('regimeToast');
+            const toastText = document.getElementById('regimeToastText');
+
+            toast.setAttribute('class', 'toast hide bg-'+type);
+
+            toastText.innerHTML = text;
+
+            new bootstrap.Toast(toast, []).show();
         }
     }
 };

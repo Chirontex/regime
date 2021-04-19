@@ -161,8 +161,15 @@ else esc_html_e('Редактирование формы', 'regime');
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="button button-secondary mx-1" data-bs-dismiss="modal"><?= esc_html__('Закрыть', 'regime') ?></button>
-                    <button type="button" class="button button-primary mx-1" data-bs-dismiss="modal" onclick="document.regimeFormEdit.methods.fieldSave();"><?= esc_html__('Сохранить изменения', 'regime') ?></button>
+                    <button type="button" class="button button-primary mx-1" data-bs-dismiss="modal" onclick="document.regimeFormEdit.methods.fieldSave('<?= esc_attr__('Изменения поля сохранены!', 'regime') ?>');"><?= esc_html__('Сохранить изменения', 'regime') ?></button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+        <div id="regimeToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body">
+                <span id="regimeToastText" style="color: white;"></span>
             </div>
         </div>
     </div>
