@@ -55,13 +55,6 @@ document.regimeFormEdit = {
             
             field.placeholder = placeholder;
 
-            document.regimeFormEdit.methods.fieldRowRender(fieldId, color);
-        },
-        fieldRowRender: (fieldId, color) => {
-            let type = fieldId.split('_');
-
-            type = type[0];
-
             const row = document.createElement('tr');
 
             row.setAttribute('id', fieldId);
@@ -72,6 +65,18 @@ document.regimeFormEdit = {
                 'document.regimeFormEdit.methods.fieldEditingOpen(\''
                     +fieldId+'\');'
             );
+
+            document.regimeFormEdit.form.appendChild(row);
+
+            document.regimeFormEdit.methods.fieldRowRender(fieldId);
+        },
+        fieldRowRender: (fieldId) => {
+            let type = fieldId.split('_');
+
+            type = type[0];
+
+            const row = document.getElementById(fieldId);
+            row.innerHTML = '';
 
             let cell;
             let prop;
@@ -90,8 +95,6 @@ document.regimeFormEdit = {
 
                 row.appendChild(cell);
             }
-
-            document.regimeFormEdit.form.appendChild(row);
         },
         propCellRender: (fieldId, prop) => {
             const field = document.regimeFormEdit.fields[fieldId];
