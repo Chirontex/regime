@@ -186,6 +186,30 @@ document.regimeFormEdit.emptyModal = document
 document.regimeFormEdit.texts = {
     deleteButton: '<?= file_get_contents($path.'misc/icons/trash-2.svg') ?>',
     fieldDeleteSuccess: '<?= esc_html__('Поле удалено!', 'regime') ?>',
+    fieldDeleteError: '<?= esc_html__('Это поле удалить нельзя!', 'regime') ?>',
     fieldSaveSuccess: '<?= esc_html__('Изменения поля сохранены!', 'regime') ?>'
 };
+
+<?php
+
+if (empty($_GET['fid'])) {
+
+?>
+document.regimeFormEdit.methods.fieldAdd(
+    'email',
+    'primary',
+    '<?= esc_html__('Ваш e-mail', 'regime') ?>',
+    true
+);
+document.regimeFormEdit.methods.fieldAdd(
+    'password',
+    'primary',
+    '<?= esc_html__('Ваш пароль', 'regime') ?>',
+    true
+);
+<?php
+
+}
+
+?>
 </script>

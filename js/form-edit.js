@@ -101,23 +101,22 @@ document.regimeFormEdit = {
                 row.appendChild(cell);
             }
 
-            if (!document.regimeFormEdit.fields[fieldId].bound)
-            {
-                cell = document.createElement('td');
+            cell = document.createElement('td');
 
-                const button = document.createElement('button');
-                button.setAttribute('class', 'btn btn-sm btn-danger');
-                button.setAttribute('style', 'padding: 2px; line-height: 16px;');
-                button.setAttribute(
-                    'onclick',
-                    'document.regimeFormEdit.methods.fieldDelete(\''+fieldId+'\');'
-                );
-                button.innerHTML = document.regimeFormEdit.texts.deleteButton;
+            const button = document.createElement('button');
+            button.setAttribute('class', 'btn btn-sm btn-danger');
+            button.setAttribute('style', 'padding: 2px; line-height: 16px;');
+            
+            button.setAttribute(
+                'onclick',
+                'document.regimeFormEdit.methods.fieldDelete(\''+fieldId+'\');'
+            );
 
-                cell.appendChild(button);
+            button.innerHTML = document.regimeFormEdit.texts.deleteButton;
 
-                row.appendChild(cell);
-            }
+            cell.appendChild(button);
+
+            row.appendChild(cell);
         },
         propCellRender: (fieldId, prop) => {
             const field = document.regimeFormEdit.fields[fieldId];
@@ -280,16 +279,25 @@ document.regimeFormEdit = {
             );
         },
         fieldDelete: (fieldId) => {
-            const row = document.getElementById(fieldId);
-
-            row.parentNode.removeChild(row);
-
-            delete document.regimeFormEdit.fields[fieldId];
-
-            document.regimeFormEdit.methods.toast(
-                document.regimeFormEdit.texts.fieldDeleteSuccess,
-                'success'
+            if (document
+                .regimeFormEdit
+                .fields[fieldId].bound) document.regimeFormEdit.methods.toast(
+                document.regimeFormEdit.texts.fieldDeleteError,
+                'danger'
             );
+            else
+            {
+                const row = document.getElementById(fieldId);
+
+                row.parentNode.removeChild(row);
+
+                delete document.regimeFormEdit.fields[fieldId];
+
+                document.regimeFormEdit.methods.toast(
+                    document.regimeFormEdit.texts.fieldDeleteSuccess,
+                    'success'
+                );
+            }
         },
         toast: (text, type) => {
             const toast = document.getElementById('regimeToast');
