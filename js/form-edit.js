@@ -2,8 +2,9 @@
  * @package Regime
  */
 document.regimeFormEdit = {
-    form: document.getElementById('regimeFormFields'),
-    emptyModal: document.getElementById('regimeFieldEditingModal').innerHTML,
+    form: null,
+    emptyModal: null,
+    texts: {},
     fieldProps: [
         'placeholder',
         'label',
@@ -18,7 +19,7 @@ document.regimeFormEdit = {
     fieldsCount: 0,
     fields: {},
     methods: {
-        fieldAdd: (type, color, placeholder) => {
+        fieldAdd: (type, color, placeholder, bound = false) => {
             let fieldId = '';
 
             for (let i = 1; i != undefined; i++)
@@ -34,6 +35,7 @@ document.regimeFormEdit = {
             const field = document.regimeFormEdit.fields[fieldId];
 
             field.position = ++document.regimeFormEdit.fieldsCount;
+            field.bound = bound;
 
             if (type != 'reset')
             {
@@ -99,20 +101,23 @@ document.regimeFormEdit = {
                 row.appendChild(cell);
             }
 
-            cell = document.createElement('td');
+            if (!document.regimeFormEdit.fields[fieldId].bound)
+            {
+                cell = document.createElement('td');
 
-            const button = document.createElement('button');
-            button.setAttribute('class', 'btn btn-sm btn-danger');
-            button.setAttribute('style', 'padding: 2px; line-height: 16px;');
-            button.setAttribute(
-                'onclick',
-                'document.regimeFormEdit.methods.fieldDelete(\''+fieldId+'\');'
-            );
-            button.innerHTML = document.regimeTexts.deleteButton;
+                const button = document.createElement('button');
+                button.setAttribute('class', 'btn btn-sm btn-danger');
+                button.setAttribute('style', 'padding: 2px; line-height: 16px;');
+                button.setAttribute(
+                    'onclick',
+                    'document.regimeFormEdit.methods.fieldDelete(\''+fieldId+'\');'
+                );
+                button.innerHTML = document.regimeFormEdit.texts.deleteButton;
 
-            cell.appendChild(button);
+                cell.appendChild(button);
 
-            row.appendChild(cell);
+                row.appendChild(cell);
+            }
         },
         propCellRender: (fieldId, prop) => {
             const field = document.regimeFormEdit.fields[fieldId];
@@ -270,7 +275,7 @@ document.regimeFormEdit = {
                 .regimeFormEdit.methods.fieldRowRender(fieldId);
 
             document.regimeFormEdit.methods.toast(
-                document.regimeTexts.fieldSaveSuccess,
+                document.regimeFormEdit.texts.fieldSaveSuccess,
                 'success'
             );
         },
@@ -282,7 +287,7 @@ document.regimeFormEdit = {
             delete document.regimeFormEdit.fields[fieldId];
 
             document.regimeFormEdit.methods.toast(
-                document.regimeTexts.fieldDeleteSuccess,
+                document.regimeFormEdit.texts.fieldDeleteSuccess,
                 'success'
             );
         },

@@ -9,31 +9,37 @@ if (!defined('ABSPATH')) die;
     <h1 class="h3 text-center mb-5">
 <?php
 
-if (empty($_GET['fid'])) esc_html_e('Создание формы', 'regime');
-else esc_html_e('Редактирование формы', 'regime');
+$page_header = empty($_GET['fid']) ?
+    esc_html__('Создание', 'regime') : esc_html__('Редактирование', 'regime');
+
+switch ($_GET['ftype']) {
+
+    case 'registration':
+        $page_header .= ' '.esc_html__('формы регистрации', 'regime');
+        break;
+
+    case 'authorization':
+        $page_header .= ' '.esc_html__('формы авторизации', 'regime');
+        break;
+
+    case 'profile':
+        $page_header .= ' '.esc_html__('формы профиля', 'regime');
+        break;
+
+}
+
+echo $page_header;
 
 ?>
     </h1>
-    <div class="mb-5 mx-auto" style="max-width: 500px;">
-        <div class="text-center mb-3">
-            <?= esc_html__('Тип формы:', 'regime') ?>
+    <form action="<?= site_url('/wp-admin/admin.php?page=regime-forms') ?>" method="post" class="mb-5">
+        <?php wp_nonce_field('regimeFormSave', 'regimeFormSave-wpnp') ?>
+        <input type="hidden" name="regimeFormType" value="<?= htmlspecialchars($_GET['ftype']) ?>">
+        <div class="mb-3 text-center">
+            <button type="submit" class="button button-primary"><?= esc_html__('Сохранить форму', 'regime') ?></button>
         </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                <input type="radio" name="regimeFormType" id="regimeFormTypeRegistration" value="registration"<?= $_GET['ftype'] === 'registration' ? 'checked' : '' ?>>
-                <label for="regimeFormTypeRegistration" class="form-label"><?= esc_html__('Регистрация', 'regime') ?></label>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                <input type="radio" name="regimeFormType" id="regimeFormTypeAuthorization" value="authorization"<?= $_GET['ftype'] === 'authorization' ? 'checked' : '' ?>>
-                <label for="regimeFormTypeAuthorization" class="form-label"><?= esc_html__('Авторизация', 'regime') ?></label>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                <input type="radio" name="regimeFormType" id="regimeFormTypeProfile" value="profile"<?= $_GET['ftype'] === 'profile' ? 'checked' : '' ?>>
-                <label for="regimeFormTypeProfile" class="form-label"><?= esc_html__('Профиль', 'regime') ?></label>
-            </div>
-        </div>
-    </div>
-    <div class="row">
+    </form>
+    <div class="row mb-5">
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
             <h4 class="text-center mb-5">
                 <?= esc_html__('Добавление полей', 'regime') ?>
@@ -95,9 +101,7 @@ else esc_html_e('Редактирование формы', 'regime');
                         <th></th>
                     </tr>
                 </thead>
-                <tbody id="regimeFormFields">
-
-                </tbody>
+                <tbody id="regimeFormFields"></tbody>
             </table>
         </div>
     </div>
@@ -175,7 +179,11 @@ else esc_html_e('Редактирование формы', 'regime');
     </div>
 </div>
 <script>
-document.regimeTexts = {
+document.regimeFormEdit.form = document.getElementById('regimeFormFields');
+document.regimeFormEdit.emptyModal = document
+    .getElementById('regimeFieldEditingModal').innerHTML;
+
+document.regimeFormEdit.texts = {
     deleteButton: '<?= file_get_contents($path.'misc/icons/trash-2.svg') ?>',
     fieldDeleteSuccess: '<?= esc_html__('Поле удалено!', 'regime') ?>',
     fieldSaveSuccess: '<?= esc_html__('Изменения поля сохранены!', 'regime') ?>'
