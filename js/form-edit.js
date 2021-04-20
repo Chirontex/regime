@@ -83,7 +83,18 @@ document.regimeFormEdit = {
             const row = document.getElementById(fieldId);
             row.innerHTML = '';
 
-            let cell;
+            row.appendChild(document.regimeFormEdit.methods.buttonCellRender(
+                document.regimeFormEdit.texts.upButton,
+                'success',
+                ''
+            ));
+
+            row.appendChild(document.regimeFormEdit.methods.buttonCellRender(
+                document.regimeFormEdit.texts.downButton,
+                'success',
+                ''
+            ));
+
             let prop;
 
             for (let i = 0; i < document.regimeFormEdit.fieldProps.length; i++)
@@ -94,29 +105,34 @@ document.regimeFormEdit = {
                     prop == 'multiple' ||
                     prop == 'strict') continue;
 
-                cell = document
-                    .regimeFormEdit.methods.propCellRender(
-                        fieldId, prop);
-
-                row.appendChild(cell);
+                row.appendChild(
+                    document.regimeFormEdit.methods.propCellRender(
+                        fieldId,
+                        prop
+                    )
+                );
             }
 
-            cell = document.createElement('td');
+            row.appendChild(document.regimeFormEdit.methods.buttonCellRender(
+                document.regimeFormEdit.texts.deleteButton,
+                'danger',
+                'document.regimeFormEdit.methods.fieldDelete(\''+fieldId+'\');'
+            ));
+        },
+        buttonCellRender: (text, color, funcname) => {
+            const cell = document.createElement('td');
 
             const button = document.createElement('button');
-            button.setAttribute('class', 'btn btn-sm btn-danger');
-            button.setAttribute('style', 'padding: 2px; line-height: 16px;');
-            
             button.setAttribute(
-                'onclick',
-                'document.regimeFormEdit.methods.fieldDelete(\''+fieldId+'\');'
+                'class',
+                'btn btn-sm btn-'+color+' field-func-button'
             );
-
-            button.innerHTML = document.regimeFormEdit.texts.deleteButton;
+            button.setAttribute('onclick', funcname);
+            button.innerHTML = text;
 
             cell.appendChild(button);
 
-            row.appendChild(cell);
+            return cell;
         },
         propCellRender: (fieldId, prop) => {
             const field = document.regimeFormEdit.fields[fieldId];

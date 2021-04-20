@@ -38,11 +38,18 @@ final class Forms extends AdminPage
 
             if ($_GET['faction'] === 'edit') {
 
+                wp_enqueue_style(
+                    'form-edit',
+                    $this->url.'css/form-edit.css',
+                    [],
+                    '0.0.2'
+                );
+
                 wp_enqueue_script(
                     'form-edit',
                     $this->url.'js/form-edit.js',
                     [],
-                    '0.6.3',
+                    '0.6.5',
                 );
 
             }

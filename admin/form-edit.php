@@ -92,6 +92,8 @@ echo $page_header;
             <table class="table table-sm table-hover mb-3">
                 <thead>
                     <tr>
+                        <th></th>
+                        <th></th>
                         <th><?= esc_html__('Плейсхолдер', 'regime') ?></th>
                         <th><?= esc_html__('Лейбл', 'regime') ?></th>
                         <th><?= esc_html__('Ключ', 'regime') ?></th>
@@ -185,6 +187,8 @@ document.regimeFormEdit.emptyModal = document
 
 document.regimeFormEdit.texts = {
     deleteButton: '<?= file_get_contents($path.'misc/icons/trash-2.svg') ?>',
+    upButton: '<?= file_get_contents($path.'misc/icons/arrow-up.svg') ?>',
+    downButton: '<?= file_get_contents($path.'misc/icons/arrow-down.svg') ?>',
     fieldDeleteSuccess: '<?= esc_html__('Поле удалено!', 'regime') ?>',
     fieldDeleteError: '<?= esc_html__('Это поле удалить нельзя!', 'regime') ?>',
     fieldSaveSuccess: '<?= esc_html__('Изменения поля сохранены!', 'regime') ?>'
