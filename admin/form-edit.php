@@ -201,12 +201,17 @@ document.regimeFormEdit.methods.fieldAdd(
     '<?= esc_html__('Ваш e-mail', 'regime') ?>',
     true
 );
+document.regimeFormEdit.fields.email_1.key = 'user_email';
+document.regimeFormEdit.fields.email_1.label = '<?= esc_html__('E-mail:', 'regime') ?>';
+
 document.regimeFormEdit.methods.fieldAdd(
     'password',
     'primary',
     '<?= esc_html__('Ваш пароль', 'regime') ?>',
     true
 );
+document.regimeFormEdit.fields.password_1.key = 'user_pass';
+document.regimeFormEdit.fields.password_1.label = '<?= esc_html__('Пароль:', 'regime') ?>';
 <?php
 
 }
