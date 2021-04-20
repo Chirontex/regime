@@ -32,13 +32,13 @@ echo $page_header;
 
 ?>
     </h1>
-    <form action="<?= site_url('/wp-admin/admin.php?page=regime-forms') ?>" method="post" class="mb-5">
-        <?php wp_nonce_field('regimeFormSave', 'regimeFormSave-wpnp') ?>
-        <input type="hidden" name="regimeFormType" value="<?= htmlspecialchars($_GET['ftype']) ?>">
-        <div class="mb-3 text-center">
-            <button type="submit" class="button button-primary"><?= esc_html__('Сохранить форму', 'regime') ?></button>
-        </div>
-    </form>
+    <div class="mb-5 text-center">
+        <form id="regimeFormSave" action="<?= site_url('/wp-admin/admin.php?page=regime-forms') ?>" method="post">
+            <?php wp_nonce_field('regimeFormSave', 'regimeFormSave-wpnp') ?>
+            <input type="hidden" name="regimeFormType" value="<?= htmlspecialchars($_GET['ftype']) ?>">
+        </form>
+        <button class="button button-primary" onclick="document.regimeFormEdit.methods.allFormSave();"><?= esc_html__('Сохранить форму', 'regime') ?></button>
+    </div>
     <div class="row mb-5">
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
             <h4 class="text-center mb-5">

@@ -388,6 +388,21 @@ document.regimeFormEdit = {
             }
 
             document.regimeFormEdit.methods.formRenderReload();
+        },
+        allFormSave: () => {
+            const postForm = document.getElementById('regimeFormSave');
+
+            const input = document.createElement('input');
+            input.setAttribute('type', 'hidden');
+            input.setAttribute('name', 'regimeFormFields');
+            input.setAttribute(
+                'value',
+                JSON.stringify(document.regimeFormEdit.fields)
+            );
+
+            postForm.appendChild(input);
+
+            postForm.submit();
         }
     }
 };
