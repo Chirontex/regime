@@ -48,4 +48,23 @@ class ErrorsList
         ]
     ];
 
+    const TABLE_PROPS = [
+        '-20' => [
+            'message' => 'Key cannot be empty.',
+            'code' => -20
+        ],
+        '-21' => [
+            'message' => 'Params cannot be empty.',
+            'code' => -21
+        ],
+        '-22' => [
+            'message' => 'Invalid entity type.',
+            'code' => -22
+        ],
+        '-23' => [
+            'message' => 'Invalid entity.',
+            'code' => -23
+        ]
+    ];
+
 }
