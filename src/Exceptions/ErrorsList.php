@@ -64,6 +64,17 @@ class ErrorsList
         '-23' => [
             'message' => 'Invalid entity.',
             'code' => -23
+        ],
+        '-24' => [
+            'message' => 'Table name cannot be empty.',
+            'code' => -24
+        ]
+    ];
+
+    const TABLE = [
+        '-30' => [
+            'message' => 'Table creation failure.',
+            'code' => -30
         ]
     ];
 

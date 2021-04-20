@@ -29,9 +29,31 @@ class TableProps implements ITableProps
      */
     protected $indexes = [];
 
+    /**
+     * @var string $table_name
+     * Table name.
+     * @since 0.3.6
+     */
+    protected $table_name = '';
+
     const FIELD = 'field';
 
     const INDEX = 'index';
+
+    /**
+     * @since 0.3.6
+     */
+    public function __construct(string $table_name)
+    {
+        
+        if (empty($table_name)) throw new TablePropsException(
+            ErrorsList::TABLE_PROPS['-24']['message'],
+            ErrorsList::TABLE_PROPS['-24']['code']
+        );
+
+        $this->table_name = $table_name;
+
+    }
 
     /**
      * @since 0.3.4
@@ -78,6 +100,16 @@ class TableProps implements ITableProps
     {
 
         return $this->indexes;
+
+    }
+
+    /**
+     * @since 0.3.6
+     */
+    public function getTableName(): string
+    {
+        
+        return $this->table_name;
 
     }
 

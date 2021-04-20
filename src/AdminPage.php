@@ -4,7 +4,7 @@
  */
 namespace Regime;
 
-use Regime\Containers\AdminMenuPage;
+use Regime\Interfaces\IAdminMenuPage;
 
 /**
  * @abstract
@@ -25,7 +25,7 @@ abstract class AdminPage extends PointOfEntry
     ];
 
     /**
-     * @var \Regime\Containers\AdminMenuPage $container
+     * @var IAdminMenuPage $container
      * Admin menu page props container obj.
      * @since 0.0.5
      */
@@ -40,10 +40,10 @@ abstract class AdminPage extends PointOfEntry
      * @param string $url
      * Plugin root directory as URL.
      * 
-     * @param \Regime\Containers\AdminMenuPage $container
+     * @param IAdminMenuPage $container
      * Admin menu page props container obj.
      */
-    public function __construct(string $path, string $url, AdminMenuPage $container)
+    public function __construct(string $path, string $url, IAdminMenuPage $container)
     {
         
         $this->container = $container;
