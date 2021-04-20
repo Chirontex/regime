@@ -4,6 +4,7 @@
  */
 namespace Regime\Containers;
 
+use Regime\Interfaces\IAdminMenuPage;
 use Regime\Exceptions\AdminMenuPageException;
 use Regime\Exceptions\ErrorsList;
 
@@ -11,7 +12,7 @@ use Regime\Exceptions\ErrorsList;
  * Admin menu page props container class.
  * @since 0.0.5
  */
-class AdminMenuPage
+class AdminMenuPage implements IAdminMenuPage
 {
 
     /**
@@ -95,10 +96,7 @@ class AdminMenuPage
     }
 
     /**
-     * Get view.
      * @since 0.0.5
-     * 
-     * @return string
      */
     public function viewGet() : string
     {
@@ -108,10 +106,7 @@ class AdminMenuPage
     }
 
     /**
-     * Get menu title.
      * @since 0.0.5
-     * 
-     * @return string
      */
     public function menuTitleGet() : string
     {
@@ -121,10 +116,7 @@ class AdminMenuPage
     }
 
     /**
-     * Get page title.
      * @since 0.0.5
-     * 
-     * @return string
      */
     public function pageTitleGet() : string
     {
@@ -134,10 +126,7 @@ class AdminMenuPage
     }
 
     /**
-     * Get slug.
      * @since 0.0.5
-     * 
-     * @return string
      */
     public function slugGet() : string
     {
