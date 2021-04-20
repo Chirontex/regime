@@ -86,13 +86,13 @@ document.regimeFormEdit = {
             row.appendChild(document.regimeFormEdit.methods.buttonCellRender(
                 document.regimeFormEdit.texts.upButton,
                 'success',
-                ''
+                'document.regimeFormEdit.methods.fieldMove(\''+fieldId+'\', -1);'
             ));
 
             row.appendChild(document.regimeFormEdit.methods.buttonCellRender(
                 document.regimeFormEdit.texts.downButton,
                 'success',
-                ''
+                'document.regimeFormEdit.methods.fieldMove(\''+fieldId+'\');'
             ));
 
             let prop;
@@ -349,6 +349,45 @@ document.regimeFormEdit = {
                 document.regimeFormEdit.methods.fieldRowCreate(fieldId);
                 document.regimeFormEdit.methods.fieldRowRender(fieldId);
             }
+        },
+        fieldMove: (fieldId, modus = 1) => {
+            modus = modus >= 0 ? 1 : -1;
+
+            const fields = document.regimeFormEdit.fields;
+
+            const fieldsEnqueue = {};
+
+            for (fid in fields)
+            {
+                fieldsEnqueue[fields[fid].position] = fid;
+            }
+
+            const enqueueKeys = Object.keys(fieldsEnqueue);
+
+            const actualPos = fields[fieldId].position * modus;
+
+            let secondFieldId;
+
+            for (let i = actualPos + 1; i != undefined; i++)
+            {
+                secondFieldId = fieldsEnqueue[i * modus];
+
+                if (secondFieldId != undefined)
+                {
+                    fields[fieldId].position = fields[secondFieldId].position;
+                    fields[secondFieldId].position = actualPos * modus;
+
+                    break;
+                }
+
+                if (modus > 0)
+                {
+                    if (i > enqueueKeys[enqueueKeys.length - 1]) break;
+                }
+                else if (i == 0) break;
+            }
+
+            document.regimeFormEdit.methods.formRenderReload();
         }
     }
 };
