@@ -391,18 +391,63 @@ document.regimeFormEdit = {
         },
         allFormSave: () => {
             const postForm = document.getElementById('regimeFormSave');
+            const fields = document.regimeFormEdit.fields;
 
-            const input = document.createElement('input');
-            input.setAttribute('type', 'hidden');
-            input.setAttribute('name', 'regimeFormFields');
-            input.setAttribute(
-                'value',
-                JSON.stringify(document.regimeFormEdit.fields)
-            );
+            const invalidFields = {};
 
-            postForm.appendChild(input);
+            let type;
 
-            postForm.submit();
+            for (fieldId in fields)
+            {
+                if (fields[fieldId].bound)
+                {
+                    type = fieldId.split('_');
+                    type = type[0];
+
+                    if (type == 'email') fields[fieldId].required = true;
+                }
+
+                if (fields[fieldId].key == '')
+                {
+                    invalidFields[fieldId] = [];
+
+                    invalidFields[fieldId].push('key');
+                }
+            }
+
+            document.regimeFormEdit.methods.formRenderReload();
+
+            if (JSON.stringify(invalidFields) == '{}')
+            {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'hidden');
+                input.setAttribute('name', 'regimeFormFields');
+                input.setAttribute(
+                    'value',
+                    JSON.stringify(fields)
+                    );
+                
+                postForm.appendChild(input);
+                
+                postForm.submit();
+            }
+            else
+            {
+                for (fieldId in invalidFields)
+                {
+                    for (let i = 0; i < invalidFields[fieldId].length; i++)
+                    {
+                        document.getElementById(
+                            fieldId+'_'+invalidFields[fieldId][i]
+                        ).setAttribute('class', 'table-danger');
+                    }
+                }
+
+                document.regimeFormEdit.methods.toast(
+                    document.regimeFormEdit.texts.formSaveError,
+                    'danger'
+                );
+            }
         }
     }
 };

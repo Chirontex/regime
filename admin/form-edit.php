@@ -191,7 +191,8 @@ document.regimeFormEdit.texts = {
     downButton: '<?= file_get_contents($path.'misc/icons/arrow-down.svg') ?>',
     fieldDeleteSuccess: '<?= esc_html__('Поле удалено!', 'regime') ?>',
     fieldDeleteError: '<?= esc_html__('Это поле удалить нельзя!', 'regime') ?>',
-    fieldSaveSuccess: '<?= esc_html__('Изменения поля сохранены!', 'regime') ?>'
+    fieldSaveSuccess: '<?= esc_html__('Изменения поля сохранены!', 'regime') ?>',
+    formSaveError: '<?= esc_html__('Атрибуты некоторых полей формы указаны некорректно!', 'regime') ?>'
 };
 
 <?php

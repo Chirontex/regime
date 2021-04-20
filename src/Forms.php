@@ -49,7 +49,7 @@ final class Forms extends AdminPage
                     'form-edit',
                     $this->url.'js/form-edit.js',
                     [],
-                    '0.6.7',
+                    '0.6.9',
                 );
 
             }
