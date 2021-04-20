@@ -36,6 +36,7 @@ document.regimeFormEdit = {
 
             field.position = ++document.regimeFormEdit.fieldsCount;
             field.bound = bound;
+            field.class = 'table-'+color;
 
             if (type != 'reset')
             {
@@ -60,15 +61,19 @@ document.regimeFormEdit = {
             
             field.placeholder = placeholder;
 
+            document.regimeFormEdit.methods.fieldRowCreate(fieldId);
+            document.regimeFormEdit.methods.fieldRowRender(fieldId);
+        },
+        fieldRowCreate: (fieldId) => {
+            const field = document.regimeFormEdit.fields[fieldId];
+
             const row = document.createElement('tr');
 
             row.setAttribute('id', fieldId);
-            row.setAttribute('class', 'table-'+color);
+            row.setAttribute('class', field.class);
             row.setAttribute('role', 'button');
 
             document.regimeFormEdit.form.appendChild(row);
-
-            document.regimeFormEdit.methods.fieldRowRender(fieldId);
         },
         fieldRowRender: (fieldId) => {
             let type = fieldId.split('_');
@@ -308,6 +313,26 @@ document.regimeFormEdit = {
             toastText.innerHTML = text;
 
             new bootstrap.Toast(toast, []).show();
+        },
+        formRenderReload: () => {
+            const fields = document.regimeFormEdit.fields;
+
+            document.regimeFormEdit.form.innerHTML = '';
+
+            const fieldsEnqueue = {};
+
+            for (fieldId in fields)
+            {
+                fieldsEnqueue[fields[fieldId].position] = fieldId;
+            }
+
+            for (pos in fieldsEnqueue)
+            {
+                fieldId = fieldsEnqueue[pos];
+
+                document.regimeFormEdit.methods.fieldRowCreate(fieldId);
+                document.regimeFormEdit.methods.fieldRowRender(fieldId);
+            }
         }
     }
 };

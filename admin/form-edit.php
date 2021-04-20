@@ -212,6 +212,8 @@ document.regimeFormEdit.methods.fieldAdd(
 );
 document.regimeFormEdit.fields.password_1.key = 'user_pass';
 document.regimeFormEdit.fields.password_1.label = '<?= esc_html__('Пароль:', 'regime') ?>';
+
+document.regimeFormEdit.methods.formRenderReload();
 <?php
 
 }
