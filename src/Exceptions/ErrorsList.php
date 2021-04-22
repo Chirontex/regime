@@ -19,6 +19,10 @@ class ErrorsList
         '-1' => [
             'message' => '%s cannot be empty.',
             'code' => -1
+        ],
+        '-2' => [
+            'message' => '%s cannot be less than 1.',
+            'code' => -2
         ]
     ];
 
@@ -88,6 +92,14 @@ class ErrorsList
         '-32' => [
             'message' => 'Field does not exist in this table.',
             'code' => -32
+        ],
+        '-33' => [
+            'message' => 'Entry updating failure.',
+            'code' => -33
+        ],
+        '-34' => [
+            'message' => 'Entry deleting failure.',
+            'code' => -34
         ]
     ];
 

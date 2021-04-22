@@ -5,6 +5,7 @@
 namespace Regime\Models\Tables;
 
 use Regime\Exceptions\FormsTableException;
+use Regime\Exceptions\TableException;
 use Regime\Exceptions\ErrorsList;
 
 /**
@@ -44,17 +45,133 @@ class Forms extends Table
 
         $id = $this->getNewFormId();
 
-        $this
-            ->entryAdd([
-                'form_id' => $id,
-                'key' => 'type',
-                'value' => $type
-            ])
-            ->entryAdd([
-                'form_id' => $id,
-                'key' => 'fields',
-                'value' => $fields
-            ]);
+        try {
+
+            $this
+                ->entryAdd([
+                    'form_id' => $id,
+                    'key' => 'type',
+                    'value' => $type
+                ])
+                ->entryAdd([
+                    'form_id' => $id,
+                    'key' => 'fields',
+                    'value' => $fields
+                ])
+                ->entryAdd([
+                    'form_id' => $id,
+                    'key' => 'status',
+                    'value' => 'active'
+                ]);
+
+        } catch (TableException $e) {
+
+            throw new FormsTableException(
+                $e->getMessage(),
+                $e->getCode()
+            );
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Update form fields.
+     * @since 0.4.0
+     * 
+     * @param int $form_id
+     * Form ID.
+     * 
+     * @param string $fields
+     * Form fields in JSON format.
+     * 
+     * @return $this
+     * 
+     * @throws Regime\Exceptions\FormsTableException
+     */
+    public function formUpdate(int $form_id, string $fields) : self
+    {
+
+        if ($form_id < 1) throw new FormsTableException(
+            ErrorsList::COMMON['-2']['message'],
+            ErrorsList::COMMON['-2']['code']
+        );
+
+        if (empty($fields)) throw new FormsTableException(
+            sprintf(ErrorsList::COMMON['-1']['message'], 'Fields'),
+            ErrorsList::COMMON['-1']['code']
+        );
+
+        try {
+
+            $this->entryUpdate(
+                ['value' => $fields],
+                [
+                    'form_id' => $form_id,
+                    'key' => 'fields'
+                ]
+            );
+
+        } catch (TableException $e) {
+
+            throw new FormsTableException(
+                $e->getMessage(),
+                $e->getCode()
+            );
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Update form status.
+     * @since 0.4.0
+     * 
+     * @param int $form_id
+     * Form ID.
+     * 
+     * @param string $status
+     * Form status.
+     * 
+     * @return $this
+     * 
+     * @throws Regime\Exceptions\FormsTableException
+     */
+    public function formUpdateStatus(int $form_id, string $status) : self
+    {
+
+        if ($form_id < 1) throw new FormsTableException(
+            ErrorsList::COMMON['-2']['message'],
+            ErrorsList::COMMON['-2']['code']
+        );
+
+        if (empty($status)) throw new FormsTableException(
+            sprintf(ErrorsList::COMMON['-1']['message'], 'Status'),
+            ErrorsList::COMMON['-1']['code']
+        );
+
+        try {
+
+            $this->entryUpdate(
+                ['value' => $status],
+                [
+                    'form_id' => $form_id,
+                    'key' => 'status'
+                ]
+            );
+
+        } catch (TableException $e) {
+
+            throw new FormsTableException(
+                $e->getMessage(),
+                $e->getCode()
+            );
+
+        }
 
         return $this;
 

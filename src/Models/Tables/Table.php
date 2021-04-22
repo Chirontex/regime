@@ -117,17 +117,94 @@ abstract class Table
     public function entryAdd(array $values) : self
     {
 
-        $prepared = $this->valuesPrepare($values);
+        $values = $this->valuesPrepare($values);
 
         if ($this->wpdb->insert(
                 $this->wpdb->prefix.$this->table_props->getTableName(),
-                $prepared['values'],
-                $prepared['formats']
+                $values['values'],
+                $values['formats']
             ) === false) throw new TableException(
             ErrorsList::TABLE['-31']['message'],
             ErrorsList::TABLE['-31']['code']
         );
         
+        return $this;
+
+    }
+
+    /**
+     * Update an entry.
+     * @since 0.4.0
+     * 
+     * @param array $values
+     * Associative array. Format: column => value.
+     * 
+     * @param array $conditions
+     * Values in the WHERE part united with AND.
+     * Associative array. Format: column => value.
+     * 
+     * @return $this
+     * 
+     * @throws Regime\Exceptions\TableException
+     */
+    public function entryUpdate(array $values, array $conditions) : self
+    {
+
+        $values = $this->valuesPrepare($values);
+
+        $conditions = $this->valuesPrepare($conditions);
+
+        if ($this->wpdb->update(
+                $this->wpdb->prefix.$this->table_props->getTableName(),
+                $values['values'],
+                $conditions['values'],
+                $values['formats'],
+                $conditions['formats']
+            ) === false) throw new TableException(
+            ErrorsList::TABLE['-33']['message'],
+            ErrorsList::TABLE['-33']['code']
+        );
+
+        return $this;
+
+    }
+
+    /**
+     * Delete an entry (entries).
+     * @since 0.4.0
+     * 
+     * @param array $conditions
+     * Values in the WHERE part united with AND.
+     * Associative array. Format: column => value.
+     * 
+     * @param bool $strict
+     * Determines whether the method will throw an exception
+     * if nothing is removed. 
+     * 
+     * @return $this
+     * 
+     * @throws Regime\Exceptions\TableException
+     */
+    public function entryDelete(array $conditions, bool $strict = true) : self
+    {
+
+        $conditions = $this->valuesPrepare($conditions);
+
+        $delete = $this->wpdb->delete(
+            $this->wpdb->prefix.$this->table_props->getTableName(),
+            $conditions['values'],
+            $conditions['formats']
+        );
+
+        if ($strict) {
+
+            if (empty($delete)) throw new TableException(
+                ErrorsList::TABLE['-34']['message'],
+                ErrorsList::TABLE['-34']['code']
+            );
+
+        }
+
         return $this;
 
     }
