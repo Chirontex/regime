@@ -44,7 +44,7 @@ final class Main extends PointOfEntry
 
         $this->admin_pages_dir = $this->path.'admin/';
 
-        $this->forms_table_props = new TableProps('forms');
+        $this->forms_table_props = new TableProps('regime_forms');
 
         $this->forms_table_props
             ->setField('form_id', 'BIGINT(20) UNSIGNED NOT NULL')
