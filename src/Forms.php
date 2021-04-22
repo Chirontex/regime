@@ -151,9 +151,9 @@ final class Forms extends AdminPage
 
                 $fields_enqueue = array_keys($fields_enqueue);
 
-                for ($i = 1; $i <= count($fields_enqueue); $i++) {
+                for ($i = 0; $i < count($fields_enqueue); $i++) {
 
-                    $fields[$fields_enqueue[$i]]['position'] = $i;
+                    $fields[$fields_enqueue[$i]]['position'] = $i + 1;
 
                 }
 
