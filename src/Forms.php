@@ -72,6 +72,8 @@ final class Forms extends AdminPage
                         $_POST['regimeFormSave-wpnp']
                     )) $this->formSave();
 
+                    $this->formsOutput();
+
                     break;
 
                 case 'form-edit.php':
@@ -116,6 +118,14 @@ final class Forms extends AdminPage
                 );
 
             }
+
+            // разобраться, почему не грузится
+            wp_enqueue_style(
+                'forms',
+                $this->url.'css/forms.css',
+                [],
+                '0.0.2'
+            );
 
         });
 
@@ -250,6 +260,25 @@ final class Forms extends AdminPage
             $id = (int)$_GET['fid'];
 
             return $this->forms_table->getFormFields($id);
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Output forms to forms view.
+     * @since 0.4.9
+     * 
+     * @return $this
+     */
+    protected function formsOutput() : self
+    {
+
+        add_filter('regime-forms', function() {
+
+            return $this->forms_table->getAllForms();
 
         });
 
