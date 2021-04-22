@@ -10,7 +10,15 @@ spl_autoload_register(function($classname) {
 
         $file = explode('\\', $classname);
 
-        if (count($file) > 2) $path .= $file[count($file) - 2].'/';
+        if (count($file) > 2) {
+
+            for ($i = 1; $i < (count($file) - 1); $i++) {
+
+                $path .= $file[$i].'/';
+
+            }
+
+        }
 
         $file = $file[count($file) - 1].'.php';
 

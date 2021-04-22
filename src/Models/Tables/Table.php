@@ -90,12 +90,12 @@ abstract class Table
         );
 
         if ($this->wpdb->query(
-            "CREATE TABLE IF NOT EXISTS `.$this->wpdb->prefix.
-                    $this->table_props->getTableName.` (
+            "CREATE TABLE IF NOT EXISTS `".$this->wpdb->prefix.
+                    $this->table_props->getTableName()."` (
                 `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT".$fields.",
                 PRIMARY KEY (`id`)".$indexes."
             )
-            COLLATE='".DB_CHARSET."'
+            COLLATE='utf8mb4_unicode_ci'
             AUTO_INCREMENT=0"
         ) === false) throw new TableException(
             ErrorsList::TABLE['-30']['message'],
