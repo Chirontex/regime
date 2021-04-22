@@ -29,7 +29,7 @@ class FormsTable extends Table
      * 
      * @throws Regime\Exceptions\FormsTableException
      */
-    public function formAdd(string $type, string $fields) : self
+    public function addForm(string $type, string $fields) : self
     {
 
         $invalid_param = '';
@@ -91,7 +91,7 @@ class FormsTable extends Table
      * 
      * @throws Regime\Exceptions\FormsTableException
      */
-    public function formUpdate(int $form_id, string $fields) : self
+    public function updateForm(int $form_id, string $fields) : self
     {
 
         if ($form_id < 1) throw new FormsTableException(
@@ -138,7 +138,7 @@ class FormsTable extends Table
      * 
      * @throws Regime\Exceptions\FormsTableException
      */
-    public function formGet(int $form_id) : array
+    public function getForm(int $form_id) : array
     {
 
         if ($form_id < 1) throw new FormsTableException(
@@ -170,6 +170,40 @@ class FormsTable extends Table
     }
 
     /**
+     * Get all forms.
+     * @since 0.4.3
+     * 
+     * @return array
+     */
+    public function getAllForms() : array
+    {
+
+        $result = [];
+
+        try {
+
+            $select = $this->selectAll();
+
+        } catch (TableException $e) {
+
+            throw new FormsTableException(
+                $e->getMessage(),
+                $e->getCode()
+            );
+
+        }
+
+        foreach ($select as $row) {
+
+            $result[$row['form_id']][$row['key']] = $row['value'];
+
+        }
+
+        return $result;
+
+    }
+
+    /**
      * Update form status.
      * @since 0.4.0
      * 
@@ -183,7 +217,7 @@ class FormsTable extends Table
      * 
      * @throws Regime\Exceptions\FormsTableException
      */
-    public function formUpdateStatus(int $form_id, string $status) : self
+    public function updateStatus(int $form_id, string $status) : self
     {
 
         if ($form_id < 1) throw new FormsTableException(

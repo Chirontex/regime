@@ -16,6 +16,13 @@ final class Forms extends AdminPage
 {
 
     /**
+     * @var FormsTable $forms_table
+     * Class to work with BD table.
+     * @since 0.4.3
+     */
+    protected $forms_table;
+
+    /**
      * @since 0.1.4
      */
     protected function init() : self
@@ -25,6 +32,15 @@ final class Forms extends AdminPage
             $this->container->slugGet()) {
                 
             $this->enqueueInit();
+
+            $table_props = new TableProps('forms');
+
+            $table_props
+                ->setField('form_id', 'BIGINT(20) UNSIGNED NOT NULL')
+                ->setField('key', 'VARCHAR(255) NOT NULL')
+                ->setField('value', 'LONGTEXT NOT NULL');
+
+            $this->forms_table = new FormsTable($this->wpdb, $table_props);
 
             $view_script = explode('/', $this->container->viewGet());
             $view_script = $view_script[count($view_script) - 1];
@@ -36,7 +52,7 @@ final class Forms extends AdminPage
                     if (isset(
                         $_POST['regimeFormSave-wpnp']
                     )) $this->formSave();
-                    
+
                     break;
 
             }
@@ -124,20 +140,11 @@ final class Forms extends AdminPage
 
                 $fields = json_encode($fields);
 
-                $table_props = new TableProps('forms');
-
-                $table_props
-                    ->setField('form_id', 'BIGINT(20) UNSIGNED NOT NULL')
-                    ->setField('key', 'VARCHAR(255) NOT NULL')
-                    ->setField('value', 'LONGTEXT NOT NULL');
-
-                $forms_table = new FormsTable($this->wpdb, $table_props);
-
                 if (isset($_POST['regimeFormId'])) {
 
                     $id = (int)$_POST['regimeFormId'];
 
-                    $forms_table->formUpdate($id, $fields);
+                    $this->forms_table->updateForm($id, $fields);
 
                     $notice_text = esc_html__(
                         'Форма успешно обновлена!',
@@ -146,7 +153,7 @@ final class Forms extends AdminPage
 
                 } else {
 
-                    $forms_table->formAdd(
+                    $this->forms_table->addForm(
                         $_POST['regimeFormType'],
                         $fields
                     );

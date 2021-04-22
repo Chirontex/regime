@@ -3,13 +3,13 @@
  * Plugin Name: Regime
  * Plugin URI: https://github.com/chirontex/regime
  * Description: Плагин для создания форм регистрации и авторизации.
- * Version: 0.4.2
+ * Version: 0.4.3
  * Author: Dmitry Shumilin
  * Author URI: mailto://chirontex@yandex.ru
 */
 /**
  * @package Regime
- * @version 0.4.2
+ * @version 0.4.3
  * 
  * Copyright 2021, Dmitry Shumilin  (email: chirontex@yandex.ru)
 
