@@ -100,6 +100,10 @@ class ErrorsList
         '-34' => [
             'message' => 'Entry deleting failure.',
             'code' => -34
+        ],
+        '-35' => [
+            'message' => 'Data selecting failure.',
+            'code ' => -35
         ]
     ];
 

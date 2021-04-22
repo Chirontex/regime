@@ -26,9 +26,20 @@ final class Forms extends AdminPage
                 
             $this->enqueueInit();
 
-            if (isset(
-                $_POST['regimeFormSave-wpnp']
-            )) $this->formSave();
+            $view_script = explode('/', $this->container->viewGet());
+            $view_script = $view_script[count($view_script) - 1];
+
+            switch ($view_script) {
+
+                case 'forms.php':
+
+                    if (isset(
+                        $_POST['regimeFormSave-wpnp']
+                    )) $this->formSave();
+                    
+                    break;
+
+            }
         
         }
 

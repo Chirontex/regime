@@ -128,6 +128,48 @@ class FormsTable extends Table
     }
 
     /**
+     * Get the form by ID.
+     * @since 0.4.2
+     * 
+     * @param int $form_id
+     * Form ID. Cannot be less than 1.
+     * 
+     * @return array
+     * 
+     * @throws Regime\Exceptions\FormsTableException
+     */
+    public function formGet(int $form_id) : array
+    {
+
+        if ($form_id < 1) throw new FormsTableException(
+            ErrorsList::COMMON['-2']['message'],
+            ErrorsList::COMMON['-2']['code']
+        );
+
+        $result = [];
+
+        $select = $this->wpdb->get_results(
+            $this->wpdb->prepare(
+                "SELECT t.key, t.value
+                    FROM `".$this->wpdb->prefix.
+                        $this->table_props->getTableName()."` AS t
+                    WHERE t.form_id = %d",
+                    $form_id
+            ),
+            ARRAY_A
+        );
+
+        foreach ($select as $row) {
+
+            $result[$row['key']] = $row['value'];
+
+        }
+
+        return $result;
+
+    }
+
+    /**
      * Update form status.
      * @since 0.4.0
      * 

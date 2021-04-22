@@ -4,9 +4,11 @@
  */
 namespace Regime\Models\Tables;
 
+use Regime\Containers\TableProps;
 use Regime\Interfaces\ITableProps;
 use Regime\Exceptions\TableException;
 use Regime\Exceptions\ErrorsList;
+use Regime\Exceptions\TablePropsException;
 use wpdb;
 
 /**
@@ -206,6 +208,33 @@ abstract class Table
         }
 
         return $this;
+
+    }
+
+    /**
+     * Select all entries from table.
+     * @since 0.4.2
+     * 
+     * @return array
+     * 
+     * @throws Regime\Exceptions\TableException
+     */
+    public function selectAll() : array
+    {
+
+        $result = $this->wpdb->get_results(
+            "SELECT *
+                FROM `".$this->wpdb->prefix.
+                    $this->table_props->getTableName()."`",
+            ARRAY_A
+        );
+
+        if (!is_array($result)) throw new TablePropsException(
+            ErrorsList::TABLE['-35']['message'],
+            ErrorsList::TABLE['-35']['code']
+        );
+
+        return $result;
 
     }
 
