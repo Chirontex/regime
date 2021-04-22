@@ -4,7 +4,6 @@
  */
 namespace Regime\Models\Tables;
 
-use Regime\Containers\TableProps;
 use Regime\Interfaces\ITableProps;
 use Regime\Exceptions\TableException;
 use Regime\Exceptions\ErrorsList;

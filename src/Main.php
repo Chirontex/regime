@@ -5,6 +5,7 @@
 namespace Regime;
 
 use Regime\Containers\AdminMenuPage;
+use Regime\Containers\TableProps;
 
 /**
  * @final
@@ -29,12 +30,26 @@ final class Main extends PointOfEntry
     protected $icons_path = 'misc/icons/';
 
     /**
+     * @var TableProps $forms_table_props
+     * Forms table properties container.
+     * @since 0.4.4
+     */
+    protected $forms_table_props;
+
+    /**
      * @since 0.0.3
      */
     protected function init() : self
     {
 
         $this->admin_pages_dir = $this->path.'admin/';
+
+        $this->forms_table_props = new TableProps('forms');
+
+        $this->forms_table_props
+            ->setField('form_id', 'BIGINT(20) UNSIGNED NOT NULL')
+            ->setField('key', 'VARCHAR(255) NOT NULL')
+            ->setField('value', 'LONGTEXT NOT NULL');
 
         if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false) {
 
@@ -111,7 +126,12 @@ final class Main extends PointOfEntry
             'regime-forms'
         );
 
-        new Forms($this->path, $this->url, $forms_container);
+        new Forms(
+            $this->path,
+            $this->url,
+            $forms_container,
+            $this->forms_table_props
+        );
 
         return $this;
 

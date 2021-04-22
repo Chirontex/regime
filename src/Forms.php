@@ -4,7 +4,8 @@
  */
 namespace Regime;
 
-use Regime\Containers\TableProps;
+use Regime\Interfaces\IAdminMenuPage;
+use Regime\Interfaces\ITableProps;
 use Regime\Models\Tables\FormsTable;
 
 /**
@@ -23,6 +24,28 @@ final class Forms extends AdminPage
     protected $forms_table;
 
     /**
+     * @var ITableProps $table_props
+     * Table properties container.
+     * @since 0.4.4
+     */
+    protected $table_props;
+
+    /**
+     * @since 0.4.4
+     * 
+     * @param ITableProps $table_props
+     * Table properties container.
+     */
+    public function __construct(string $path, string $url, IAdminMenuPage $container, ITableProps $table_props)
+    {
+        
+        $this->table_props = $table_props;
+
+        parent::__construct($path, $url, $container);
+
+    }
+
+    /**
      * @since 0.1.4
      */
     protected function init() : self
@@ -33,14 +56,10 @@ final class Forms extends AdminPage
                 
             $this->enqueueInit();
 
-            $table_props = new TableProps('forms');
-
-            $table_props
-                ->setField('form_id', 'BIGINT(20) UNSIGNED NOT NULL')
-                ->setField('key', 'VARCHAR(255) NOT NULL')
-                ->setField('value', 'LONGTEXT NOT NULL');
-
-            $this->forms_table = new FormsTable($this->wpdb, $table_props);
+            $this->forms_table = new FormsTable(
+                $this->wpdb,
+                $this->table_props
+            );
 
             $view_script = explode('/', $this->container->viewGet());
             $view_script = $view_script[count($view_script) - 1];
