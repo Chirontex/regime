@@ -15,7 +15,7 @@ abstract class AdminPage extends PointOfEntry
 {
 
     /**
-     * @var array $notice
+     * @var array $notice_container
      * Notice container. Contains notice type and text.
      * @since 0.0.3
      */
@@ -32,6 +32,13 @@ abstract class AdminPage extends PointOfEntry
     protected $container;
 
     /**
+     * @var string $notice_fail_message
+     * Typical verifying nonce fail message.
+     * @since 0.4.1
+     */
+    protected $nonce_fail_message = '';
+
+    /**
      * @since 0.0.4
      * 
      * @param string $path
@@ -45,6 +52,11 @@ abstract class AdminPage extends PointOfEntry
      */
     public function __construct(string $path, string $url, IAdminMenuPage $container)
     {
+
+        $this->nonce_fail_message = esc_html__(
+            'Произошла ошибка при сохранении формы. Скорее всего, это произошло потому, что страница была загружена слишком давно. Пожалуйста, попробуйте ещё раз.',
+            'regime'
+        );
         
         $this->container = $container;
 

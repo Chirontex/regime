@@ -12,7 +12,7 @@ use Regime\Exceptions\ErrorsList;
  * Forms table class.
  * @since 0.3.7
  */
-class Forms extends Table
+class FormsTable extends Table
 {
 
     /**

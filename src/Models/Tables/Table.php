@@ -91,7 +91,7 @@ abstract class Table
         if ($this->wpdb->query(
             "CREATE TABLE IF NOT EXISTS `.$this->wpdb->prefix.
                     $this->table_props->getTableName.` (
-                `id` BIGINT NOT NULL AUTO_INCREMENT".$fields.",
+                `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT".$fields.",
                 PRIMARY KEY (`id`)".$indexes."
             )
             COLLATE='".DB_CHARSET."'

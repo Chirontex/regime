@@ -9,8 +9,9 @@ if (!defined('ABSPATH')) die;
     <h1 class="h3 text-center mb-5">
 <?php
 
-$page_header = empty($_GET['fid']) ?
-    esc_html__('Создание', 'regime') : esc_html__('Редактирование', 'regime');
+$page_header = isset($_GET['fid']) ?
+    esc_html__('Редактирование', 'regime') :
+    esc_html__('Создание', 'regime');
 
 switch ($_GET['ftype']) {
 
@@ -35,7 +36,18 @@ echo $page_header;
     <div class="mb-5 text-center">
         <form id="regimeFormSave" action="<?= site_url('/wp-admin/admin.php?page=regime-forms') ?>" method="post">
             <?php wp_nonce_field('regimeFormSave', 'regimeFormSave-wpnp') ?>
-            <input type="hidden" name="regimeFormType" value="<?= htmlspecialchars($_GET['ftype']) ?>">
+<?php
+
+if (isset($_GET['fid'])) {
+
+?>
+            <input type="hidden" name="regimeFormId" value="<?= htmlspecialchars(urldecode($_GET['fid'])) ?>">
+<?php
+
+}
+
+?>
+            <input type="hidden" name="regimeFormType" value="<?= htmlspecialchars(urldecode($_GET['ftype'])) ?>">
         </form>
         <button class="button button-primary" onclick="document.regimeFormEdit.methods.allFormSave();"><?= esc_html__('Сохранить форму', 'regime') ?></button>
     </div>
