@@ -36,10 +36,6 @@ class TableProps implements ITableProps
      */
     protected $table_name = '';
 
-    const FIELD = 'field';
-
-    const INDEX = 'index';
-
     /**
      * @since 0.3.6
      */
@@ -63,7 +59,7 @@ class TableProps implements ITableProps
     public function setField(string $key, string $params) : self
     {
 
-        $this->setEntity(self::FIELD, ['key' => $key, 'params' => $params]);
+        $this->setEntity(ITableProps::FIELD, ['key' => $key, 'params' => $params]);
 
         return $this;
 
@@ -77,7 +73,7 @@ class TableProps implements ITableProps
     public function setIndex(string $key, string $params) : self
     {
 
-        $this->setEntity(self::INDEX, ['key' => $key, 'params' => $params]);
+        $this->setEntity(ITableProps::INDEX, ['key' => $key, 'params' => $params]);
 
         return $this;
 
