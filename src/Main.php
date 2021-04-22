@@ -113,6 +113,7 @@ final class Main extends PointOfEntry
 
                 if (isset($_GET['fid'])) $page_title = empty($_GET['fid']) ?
                     $page_title : esc_html__('Редактирование формы | Regime', 'regime');
+                elseif (!isset($_GET['ftype'])) $_GET['ftype'] = 'registration';
 
             }
 

@@ -74,6 +74,12 @@ final class Forms extends AdminPage
 
                     break;
 
+                case 'form-edit.php':
+
+                    if (isset($_GET['fid'])) $this->formGet();
+
+                    break;
+
             }
         
         }
@@ -139,54 +145,111 @@ final class Forms extends AdminPage
 
                 $fields = json_decode($_POST['regimeFormFields'], true);
 
-                $fields_enqueue = [];
+                $type = (string)$_POST['regimeFormType'];
 
-                foreach ($fields as $field_id => $props) {
+                if (empty($fields)) $this->notice(
+                    'danger',
+                    esc_html__('Пустую форму сохранить нельзя.', 'regime')
+                );
+                elseif ($type !== 'registration' &&
+                    $type !== 'authorization' &&
+                    $type !== 'profile') $this->notice(
+                        'danger',
+                        esc_html__('Что-то пошло не так: тип формы отсутствует или указан некорректно.', 'regime')
+                    );
+                else {
 
-                    $fields_enqueue[$field_id] = (int)$props['position'];
+                    $fields_enqueue = [];
 
-                }
+                    $email_check = false;
 
-                asort($fields_enqueue, SORT_NUMERIC);
+                    $password_check = false;
 
-                $fields_enqueue = array_keys($fields_enqueue);
+                    foreach ($fields as $field_id => $props) {
 
-                for ($i = 0; $i < count($fields_enqueue); $i++) {
+                        $fields_enqueue[$field_id] = (int)$props['position'];
 
-                    $fields[$fields_enqueue[$i]]['position'] = $i + 1;
+                        $type = explode('_', $field_id);
+                        $type = $type[0];
 
-                }
+                        if ($type === 'email' &&
+                            $props['bound'] === true) $email_check = true;
 
-                $fields = json_encode($fields);
+                        if ($type === 'password' &&
+                            $props['bound'] === true) $password_check = true;
 
-                if (isset($_POST['regimeFormId'])) {
+                    }
 
-                    $id = (int)$_POST['regimeFormId'];
+                    if ($email_check && $password_check) {
 
-                    $this->forms_table->updateForm($id, $fields);
+                        asort($fields_enqueue, SORT_NUMERIC);
 
-                    $notice_text = esc_html__(
-                        'Форма успешно обновлена!',
-                        'regime'
+                        $fields_enqueue = array_keys($fields_enqueue);
+
+                        for ($i = 0; $i < count($fields_enqueue); $i++) {
+
+                            $fields[$fields_enqueue[$i]]['position'] = $i + 1;
+
+                        }
+
+                        $fields = json_encode($fields);
+
+                        if (isset($_POST['regimeFormId'])) {
+
+                            $id = (int)$_POST['regimeFormId'];
+
+                            $this->forms_table->updateForm($id, $fields);
+
+                            $notice_text = esc_html__(
+                                'Форма успешно обновлена!',
+                                'regime'
+                            );
+
+                        } else {
+
+                            $this->forms_table->addForm(
+                                (string)$_POST['regimeFormType'],
+                                $fields
+                            );
+
+                            $notice_text = esc_html__(
+                                'Форма успешно сохранена!',
+                                'regime'
+                            );
+
+                        }
+
+                        $this->notice('success', $notice_text);
+
+                    } else $this->notice(
+                        'danger',
+                        esc_html__('Форма не была сохранена: в ней отсутствуют обязательные поля.', 'regime')
                     );
 
-                } else {
-
-                    $this->forms_table->addForm(
-                        $_POST['regimeFormType'],
-                        $fields
-                    );
-
-                    $notice_text = esc_html__(
-                        'Форма успешно сохранена!',
-                        'regime'
-                    );
-
                 }
-
-                $this->notice('success', $notice_text);
 
             }
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Get form to the view.
+     * @since 0.4.8
+     * 
+     * @return $this
+     */
+    protected function formGet() : self
+    {
+
+        add_filter('regime-exist-form-fields', function() {
+
+            $id = (int)$_GET['fid'];
+
+            return $this->forms_table->getFormFields($id);
 
         });
 

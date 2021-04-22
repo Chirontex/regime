@@ -209,7 +209,13 @@ document.regimeFormEdit.texts = {
 
 <?php
 
-if (empty($_GET['fid'])) {
+if (isset($_GET['fid'])) {
+
+?>
+document.regimeFormEdit.fields = JSON.parse('<?= apply_filters('regime-exist-form-fields', '{}') ?>');
+<?php
+
+} else {
 
 ?>
 document.regimeFormEdit.methods.fieldAdd(
@@ -230,10 +236,10 @@ document.regimeFormEdit.methods.fieldAdd(
 document.regimeFormEdit.fields.password_1.key = 'user_pass';
 document.regimeFormEdit.fields.password_1.label = '<?= esc_html__('Пароль:', 'regime') ?>';
 
-document.regimeFormEdit.methods.formRenderReload();
 <?php
 
 }
 
 ?>
+document.regimeFormEdit.methods.formRenderReload();
 </script>

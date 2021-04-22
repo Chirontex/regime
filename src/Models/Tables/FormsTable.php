@@ -170,6 +170,46 @@ class FormsTable extends Table
     }
 
     /**
+     * Get form fields.
+     * @since 0.4.8
+     * 
+     * @param int $form_id
+     * Form ID. Cannot be less than 1.
+     * 
+     * @return string
+     * Fields in JSON format.
+     * 
+     * @throws Regime\Exceptions\FormsTableException
+     */
+    public function getFormFields(int $form_id) : string
+    {
+
+        if ($form_id < 1) throw new FormsTableException(
+            ErrorsList::COMMON['-2']['message'],
+            ErrorsList::COMMON['-2']['code']
+        );
+
+        $result = '{}';
+
+        $select = $this->wpdb->get_results(
+            $this->wpdb->prepare(
+                "SELECT t.value
+                    FROM `".$this->wpdb->prefix.
+                        $this->table_props->getTableName()."` AS t
+                    WHERE t.form_id = %d
+                    AND t.key = 'fields'",
+                $form_id
+                ),
+            ARRAY_A
+        );
+
+        if (!empty($select)) $result = $select[0]['value'];
+
+        return $result;
+
+    }
+
+    /**
      * Get all forms.
      * @since 0.4.3
      * 
