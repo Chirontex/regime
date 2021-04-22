@@ -15,7 +15,12 @@ class ErrorsList
      * Common exceptions.
      * @since 0.0.5
      */
-    const COMMON = [];
+    const COMMON = [
+        '-1' => [
+            'message' => '%s cannot be empty.',
+            'code' => -1
+        ]
+    ];
 
     /**
      * Admin menu page container exceptions.
@@ -75,6 +80,14 @@ class ErrorsList
         '-30' => [
             'message' => 'Table creation failure.',
             'code' => -30
+        ],
+        '-31' => [
+            'message' => 'Entry insertion failure.',
+            'code' => -31
+        ],
+        '-32' => [
+            'message' => 'Field does not exist in this table.',
+            'code' => -32
         ]
     ];
 

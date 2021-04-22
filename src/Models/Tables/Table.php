@@ -33,6 +33,7 @@ abstract class Table
 
     /**
      * Table constructor.
+     * @since 0.3.6
      * 
      * @param wpdb $wpdb
      * WP database object.
@@ -99,6 +100,56 @@ abstract class Table
             ErrorsList::TABLE['-30']['message'],
             ErrorsList::TABLE['-30']['code']
         );
+
+    }
+
+    /**
+     * Insert the entry in the table.
+     * @since 0.3.7
+     * 
+     * @param array $values
+     * Associative array. Format: column => value.
+     * 
+     * @return $this
+     * 
+     * @throws Regime\Exceptions\TableException
+     */
+    public function entryAdd(array $values) : self
+    {
+
+        $fields = $this->table_props->getFields();
+
+        $formats = [];
+
+        foreach ($values as $field => $value) {
+
+            if (!isset($fields[$field])) throw new TableException(
+                ErrorsList::TABLE['-32']['message'],
+                ErrorsList::TABLE['-32']['code']
+            );
+
+            $format = '%s';
+
+            if (is_int($value)) $format = '%d';
+
+            if (is_float($value)) $format = '%f';
+
+            if ($format === '%s') $values[$field] = (string)$value;
+
+            $formats[] = $format;
+
+        }
+
+        if ($this->wpdb->insert(
+                $this->wpdb->prefix.$this->table_props->getTableName(),
+                $values,
+                $formats
+            ) === false) throw new TableException(
+            ErrorsList::TABLE['-31']['message'],
+            ErrorsList::TABLE['-31']['code']
+        );
+        
+        return $this;
 
     }
 
