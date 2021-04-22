@@ -117,9 +117,38 @@ abstract class Table
     public function entryAdd(array $values) : self
     {
 
-        $fields = $this->table_props->getFields();
+        $prepared = $this->valuesPrepare($values);
 
-        $formats = [];
+        if ($this->wpdb->insert(
+                $this->wpdb->prefix.$this->table_props->getTableName(),
+                $prepared['values'],
+                $prepared['formats']
+            ) === false) throw new TableException(
+            ErrorsList::TABLE['-31']['message'],
+            ErrorsList::TABLE['-31']['code']
+        );
+        
+        return $this;
+
+    }
+
+    /**
+     * Preparing values and defines formats.
+     * @since 0.3.8
+     * 
+     * @param array $values
+     * 
+     * @return array
+     */
+    protected function valuesPrepare(array $values) : array
+    {
+
+        $result = [
+            'values' => [],
+            'formats' => []
+        ];
+
+        $fields = $this->table_props->getFields();
 
         foreach ($values as $field => $value) {
 
@@ -136,20 +165,13 @@ abstract class Table
 
             if ($format === '%s') $values[$field] = (string)$value;
 
-            $formats[] = $format;
+            $result['formats'][] = $format;
 
         }
 
-        if ($this->wpdb->insert(
-                $this->wpdb->prefix.$this->table_props->getTableName(),
-                $values,
-                $formats
-            ) === false) throw new TableException(
-            ErrorsList::TABLE['-31']['message'],
-            ErrorsList::TABLE['-31']['code']
-        );
-        
-        return $this;
+        $result['values'] = $values;
+
+        return $result;
 
     }
 
