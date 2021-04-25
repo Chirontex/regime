@@ -105,7 +105,8 @@ final class Main extends PointOfEntry
 
         if (isset($_GET['faction'])) {
 
-            if ($_GET['faction'] === 'edit') {
+            if ($_GET['faction'] === 'edit' ||
+                $_GET['faction'] === 'copy') {
 
                 $view = 'form-edit.php';
 

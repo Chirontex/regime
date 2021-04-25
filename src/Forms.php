@@ -53,17 +53,17 @@ final class Forms extends AdminPage
 
         if ($_GET['page'] ===
             $this->container->slugGet()) {
-                
-            $this->enqueueInit();
-
+            
             $this->forms_table = new FormsTable(
                 $this->wpdb,
                 $this->table_props
             );
 
+            $this->enqueueForms();
+                
             $view_script = explode('/', $this->container->viewGet());
             $view_script = $view_script[count($view_script) - 1];
-
+                
             switch ($view_script) {
 
                 case 'forms.php':
@@ -78,6 +78,8 @@ final class Forms extends AdminPage
 
                 case 'form-edit.php':
 
+                    $this->enqueueEdit();
+
                     if (isset($_GET['fid'])) $this->formGet();
 
                     break;
@@ -91,39 +93,52 @@ final class Forms extends AdminPage
     }
 
     /**
-     * Initialize styles and scripts enqueue.
-     * @since 0.1.4
+     * Common forms pages scripts & styles enqueue.
+     * @since 0.5.1
      * 
      * @return $this
      */
-    protected function enqueueInit() : self
+    protected function enqueueForms() : self
     {
 
         add_action('admin_enqueue_scripts', function() {
-
-            if ($_GET['faction'] === 'edit') {
-
-                wp_enqueue_style(
-                    'regime-form-edit',
-                    $this->url.'css/form-edit.css',
-                    [],
-                    '0.0.2'
-                );
-
-                wp_enqueue_script(
-                    'regime-form-edit',
-                    $this->url.'js/form-edit.js',
-                    [],
-                    '0.6.9',
-                );
-
-            }
 
             wp_enqueue_style(
                 'regime-forms',
                 $this->url.'css/forms.css',
                 [],
                 '0.0.2'
+            );
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Scripts & styles enqueue for forms edit page.
+     * @since 0.5.1
+     * 
+     * @return $this
+     */
+    protected function enqueueEdit() : self
+    {
+
+        add_action('admin_enqueue_scripts', function() {
+
+            wp_enqueue_style(
+                'regime-form-edit',
+                $this->url.'css/form-edit.css',
+                [],
+                '0.0.2'
+            );
+
+            wp_enqueue_script(
+                'regime-form-edit',
+                $this->url.'js/form-edit.js',
+                [],
+                '0.6.9',
             );
 
         });

@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) die;
         <?= esc_html__('Управление формами', 'regime') ?>
     </h1>
     <div class="text-center">
-        <button class="button button-primary dropdown-toggle" id="regime-form-create" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="button button-primary dropdown-toggle" id="regime-form-create" data-bs-toggle="dropdown" aria-expanded="false" title="<?= esc_attr__('Создать форму', 'regime') ?>">
             <?= file_get_contents($path.'misc/icons/plus.svg').
                 ' '.esc_html__('Создать форму', 'regime')
             ?>
@@ -56,31 +56,40 @@ if (empty($forms)) {
                     <p class="card-text">
                         <?= esc_html__('Форма #', 'regime').$form_id ?>
                     <br />
-                        <?= esc_html__('Тип: ', 'regime') ?>
+                        <span class="text-muted">
 <?php
 
         switch ($form['type']) {
 
             case 'registration':
-                esc_html_e('регистрационная форма', 'regime');
+                esc_html_e('Регистрационная форма', 'regime');
                 break;
 
             case 'authorization':
-                esc_html_e('авторизационная форма', 'regime');
+                esc_html_e('Авторизационная форма', 'regime');
                 break;
 
             case 'profile':
-                esc_html_e('форма профиля', 'regime');
+                esc_html_e('Форма профиля', 'regime');
                 break;
 
         }
 
 ?>
+                        </span>
+                    </p>
+                    <p class="card-text">
+                        Шорткод для вставки на страницу: [regime-form id=<?= $form_id ?>]
                     </p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" title="<?= esc_attr__('Скопировать форму', 'regime') ?>"><?= file_get_contents($path.'misc/icons/copy.svg') ?></button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" title="<?= esc_attr__('Редактировать форму', 'regime') ?>"><?= file_get_contents($path.'misc/icons/edit.svg') ?></button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" id="regime-form-copy" data-bs-toggle="dropdown" aria-expanded="false" title="<?= esc_attr__('Скопировать форму', 'regime') ?>"><?= file_get_contents($path.'misc/icons/copy.svg') ?></button>
+                            <ul class="dropdown-menu" aria-labelledby="regime-form-copy">
+                                <li><a href="<?= site_url('/wp-admin/admin.php?page=regime-forms&faction=copy&ftype=registration&fid='.$form_id) ?>" class="dropdown-item"><?= esc_html__('Скопировать в новую форму регистрации', 'regime') ?></a></li>
+                                <li><a href="<?= site_url('/wp-admin/admin.php?page=regime-forms&faction=copy&ftype=authorization&fid='.$form_id) ?>" class="dropdown-item"><?= esc_html__('Скопировать в новую форму авторизации', 'regime') ?></a></li>
+                                <li><a href="<?= site_url('/wp-admin/admin.php?page=regime-forms&faction=copy&ftype=profile&fid='.$form_id) ?>" class="dropdown-item"><?= esc_html__('Скопировать в новую форму профиля', 'regime') ?></a></li>
+                            </ul>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" title="<?= esc_attr__('Редактировать форму', 'regime') ?>" onclick="window.location.replace('<?= site_url('/wp-admin/admin.php?page=regime-forms&faction=edit&ftype='.$form['type'].'&fid='.$form_id) ?>');"><?= file_get_contents($path.'misc/icons/edit.svg') ?></button>
                         </div>
                         <button class="btn btn-sm btn-outline-danger" title="<?= esc_attr__('Удалить форму', 'regime') ?>"><?= file_get_contents($path.'misc/icons/trash-2.svg') ?></button>
                     </div>

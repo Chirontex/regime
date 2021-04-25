@@ -38,7 +38,8 @@ echo $page_header;
             <?php wp_nonce_field('regimeFormSave', 'regimeFormSave-wpnp') ?>
 <?php
 
-if (isset($_GET['fid'])) {
+if (isset($_GET['fid']) &&
+    $_GET['faction'] === 'edit') {
 
 ?>
             <input type="hidden" name="regimeFormId" value="<?= htmlspecialchars(urldecode($_GET['fid'])) ?>">
