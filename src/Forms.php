@@ -59,7 +59,7 @@ final class Forms extends AdminPage
                 $this->table_props
             );
 
-            $this->enqueueForms();
+            $this->enqueueFormsCommon();
                 
             $view_script = explode('/', $this->container->viewGet());
             $view_script = $view_script[count($view_script) - 1];
@@ -68,9 +68,14 @@ final class Forms extends AdminPage
 
                 case 'forms.php':
 
+                    $this->enqueueFormsDirectly();
+
                     if (isset(
                         $_POST['regimeFormSave-wpnp']
                     )) $this->formSave();
+                    elseif (isset(
+                        $_POST['regimeFormDelete-wpnp']
+                    )) $this->formDelete();
 
                     $this->formsOutput();
 
@@ -98,7 +103,7 @@ final class Forms extends AdminPage
      * 
      * @return $this
      */
-    protected function enqueueForms() : self
+    protected function enqueueFormsCommon() : self
     {
 
         add_action('admin_enqueue_scripts', function() {
@@ -108,6 +113,30 @@ final class Forms extends AdminPage
                 $this->url.'css/forms.css',
                 [],
                 '0.0.2'
+            );
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Enqueue for main forms page only.
+     * @since 0.5.2
+     * 
+     * @return $this
+     */
+    protected function enqueueFormsDirectly() : self
+    {
+
+        add_action('admin_enqueue_scripts', function() {
+
+            wp_enqueue_script(
+                'regime-forms',
+                $this->url.'js/forms.js',
+                [],
+                '0.0.1'
             );
 
         });
@@ -251,6 +280,40 @@ final class Forms extends AdminPage
                     );
 
                 }
+
+            }
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Initiates form deleting.
+     * 
+     * @return $this
+     */
+    protected function formDelete() : self
+    {
+
+        add_action('plugins_loaded', function() {
+
+            if (wp_verify_nonce(
+                $_POST['regimeFormDelete-wpnp'],
+                'regimeFormDelete'
+            ) === false) $this->notice(
+                'danger',
+                $this->nonce_fail_message
+            );
+            else {
+
+                $this->forms_table->deleteForm((int)$_POST['regimeFormId']);
+
+                $this->notice(
+                    'success',
+                    esc_html__('Форма успешно удалена!', 'regime')
+                );
 
             }
 

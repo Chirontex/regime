@@ -128,6 +128,45 @@ class FormsTable extends Table
     }
 
     /**
+     * Delete the form.
+     * @since 0.5.2
+     * 
+     * @param int $form_id
+     * Form ID. Cannot be less than 1.
+     * 
+     * @param bool $allow_exception
+     * Determines is exception throwing allowed where deleting fails.
+     * 
+     * @return $this
+     * 
+     * @throws Regime\Exceptions\FormsTableException
+     */
+    public function deleteForm(int $form_id, bool $allow_exception = true) : self
+    {
+
+        if ($form_id < 1) throw new FormsTableException(
+            ErrorsList::COMMON['-2']['message'],
+            ErrorsList::COMMON['-2']['code']
+        );
+
+        $delete = $this->wpdb->delete(
+            $this->wpdb->prefix.$this->table_props->getTableName(),
+            ['form_id' => $form_id],
+            ['%d']
+        );
+
+        if (($delete === false ||
+            $delete === 0) &&
+            $allow_exception) throw new FormsTableException(
+                ErrorsList::FORMS_TABLE['-40']['message'],
+                ErrorsList::FORMS_TABLE['-40']['code']
+            );
+
+        return $this;
+
+    }
+
+    /**
      * Get the form by ID.
      * @since 0.4.2
      * 

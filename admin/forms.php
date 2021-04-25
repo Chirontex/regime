@@ -21,6 +21,9 @@ if (!defined('ABSPATH')) die;
             <li><a href="<?= site_url('/wp-admin/admin.php?page=regime-forms&faction=edit&ftype=profile') ?>" class="dropdown-item"><?= esc_html__('Профиль', 'regime') ?></a></li>
         </ul>
     </div>
+    <form action="" method="post" id="regimeFormDelete">
+        <?php wp_nonce_field('regimeFormDelete', 'regimeFormDelete-wpnp') ?>
+    </form>
 <?php
 
 $forms = apply_filters('regime-forms', []);
@@ -91,7 +94,7 @@ if (empty($forms)) {
                             </ul>
                             <button type="button" class="btn btn-sm btn-outline-secondary" title="<?= esc_attr__('Редактировать форму', 'regime') ?>" onclick="window.location.replace('<?= site_url('/wp-admin/admin.php?page=regime-forms&faction=edit&ftype='.$form['type'].'&fid='.$form_id) ?>');"><?= file_get_contents($path.'misc/icons/edit.svg') ?></button>
                         </div>
-                        <button class="btn btn-sm btn-outline-danger" title="<?= esc_attr__('Удалить форму', 'regime') ?>"><?= file_get_contents($path.'misc/icons/trash-2.svg') ?></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="document.regimeForms.methods.formDelete(<?= $form_id ?>);" title="<?= esc_attr__('Удалить форму', 'regime') ?>"><?= file_get_contents($path.'misc/icons/trash-2.svg') ?></button>
                     </div>
                 </div>
             </div>
@@ -113,3 +116,6 @@ if (empty($forms)) {
 
 ?>
 </div>
+<script>
+document.regimeForms.formDelete = document.getElementById('regimeFormDelete');
+</script>

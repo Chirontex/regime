@@ -17,11 +17,11 @@ class ErrorsList
      */
     const COMMON = [
         '-1' => [
-            'message' => '%s cannot be empty.',
+            'message' => '%1$s cannot be empty.',
             'code' => -1
         ],
         '-2' => [
-            'message' => '%s cannot be less than 1.',
+            'message' => '%1$s cannot be less than 1.',
             'code' => -2
         ]
     ];
@@ -104,6 +104,13 @@ class ErrorsList
         '-35' => [
             'message' => 'Data selecting failure.',
             'code ' => -35
+        ]
+    ];
+    
+    const FORMS_TABLE = [
+        '-40' => [
+            'message' => 'Form deleting failure.',
+            'code' => -40
         ]
     ];
 
