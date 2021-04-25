@@ -104,14 +104,14 @@ final class Forms extends AdminPage
             if ($_GET['faction'] === 'edit') {
 
                 wp_enqueue_style(
-                    'form-edit',
+                    'regime-form-edit',
                     $this->url.'css/form-edit.css',
                     [],
                     '0.0.2'
                 );
 
                 wp_enqueue_script(
-                    'form-edit',
+                    'regime-form-edit',
                     $this->url.'js/form-edit.js',
                     [],
                     '0.6.9',
@@ -119,9 +119,8 @@ final class Forms extends AdminPage
 
             }
 
-            // разобраться, почему не грузится
             wp_enqueue_style(
-                'forms',
+                'regime-forms',
                 $this->url.'css/forms.css',
                 [],
                 '0.0.2'
