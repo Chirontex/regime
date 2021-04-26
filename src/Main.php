@@ -37,6 +37,13 @@ final class Main extends PointOfEntry
     protected $forms_table_props;
 
     /**
+     * @var TableProps $mails_table_props
+     * Letters table properties container.
+     * @since 0.5.3
+     */
+    protected $mails_table_props;
+
+    /**
      * @since 0.0.3
      */
     protected function init() : self
@@ -51,11 +58,19 @@ final class Main extends PointOfEntry
             ->setField('key', 'VARCHAR(255) NOT NULL')
             ->setField('value', 'LONGTEXT NOT NULL');
 
+        $this->mails_table_props = new TableProps('regime_mails');
+
+        $this->mails_table_props
+            ->setField('template_id', 'CHAR(50) NOT NULL')
+            ->setField('header', 'VARCHAR(255) NOT NULL')
+            ->setField('message', 'LONGTEXT NOT NULL');
+
         if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false) {
 
             $this
                 ->menuAdd()
                 ->formsInit()
+                ->mailsInit()
                 ->submenuRemove();
 
         }
@@ -120,7 +135,7 @@ final class Main extends PointOfEntry
 
         }
 
-        $forms_container = new AdminMenuPage(
+        $container = new AdminMenuPage(
             $this->admin_pages_dir.$view,
             file_get_contents($this->path.$this->icons_path.'grid.svg').
                 ' '.esc_html__('Формы', 'regime'),
@@ -131,8 +146,30 @@ final class Main extends PointOfEntry
         new Forms(
             $this->path,
             $this->url,
-            $forms_container,
+            $container,
             $this->forms_table_props
+        );
+
+        return $this;
+
+    }
+
+    protected function mailsInit() : self
+    {
+
+        $container = new AdminMenuPage(
+            $this->admin_pages_dir.'mails.php',
+            file_get_contents($this->path.$this->icons_path.'mail.svg').
+            ' '.esc_html__('Шаблоны писем', 'regime'),
+            'Шаблоны писем',
+            'regime-letters'
+        );
+
+        new Mails(
+            $this->path,
+            $this->url,
+            $container,
+            $this->mails_table_props
         );
 
         return $this;

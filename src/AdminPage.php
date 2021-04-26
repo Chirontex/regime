@@ -5,6 +5,7 @@
 namespace Regime;
 
 use Regime\Interfaces\IAdminMenuPage;
+use Regime\Interfaces\ITableProps;
 
 /**
  * @abstract
@@ -39,6 +40,13 @@ abstract class AdminPage extends PointOfEntry
     protected $nonce_fail_message = '';
 
     /**
+     * @var ITableProps $table_props
+     * Table properties container.
+     * @since 0.5.3
+     */
+    protected $table_props;
+
+    /**
      * @since 0.0.4
      * 
      * @param string $path
@@ -49,8 +57,12 @@ abstract class AdminPage extends PointOfEntry
      * 
      * @param IAdminMenuPage $container
      * Admin menu page props container obj.
+     * 
+     * @param ITableProps $table_props
+     * Table properties container.
+     * @since 0.5.3
      */
-    public function __construct(string $path, string $url, IAdminMenuPage $container)
+    public function __construct(string $path, string $url, IAdminMenuPage $container, ITableProps $table_props)
     {
 
         $this->nonce_fail_message = esc_html__(
@@ -59,6 +71,8 @@ abstract class AdminPage extends PointOfEntry
         );
         
         $this->container = $container;
+
+        $this->table_props = $table_props;
 
         parent::__construct($path, $url);
 

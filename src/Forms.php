@@ -4,8 +4,6 @@
  */
 namespace Regime;
 
-use Regime\Interfaces\IAdminMenuPage;
-use Regime\Interfaces\ITableProps;
 use Regime\Models\Tables\FormsTable;
 
 /**
@@ -22,28 +20,6 @@ final class Forms extends AdminPage
      * @since 0.4.3
      */
     protected $forms_table;
-
-    /**
-     * @var ITableProps $table_props
-     * Table properties container.
-     * @since 0.4.4
-     */
-    protected $table_props;
-
-    /**
-     * @since 0.4.4
-     * 
-     * @param ITableProps $table_props
-     * Table properties container.
-     */
-    public function __construct(string $path, string $url, IAdminMenuPage $container, ITableProps $table_props)
-    {
-        
-        $this->table_props = $table_props;
-
-        parent::__construct($path, $url, $container);
-
-    }
 
     /**
      * @since 0.1.4
