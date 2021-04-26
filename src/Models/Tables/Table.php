@@ -8,6 +8,7 @@ use Regime\Interfaces\ITableProps;
 use Regime\Exceptions\TableException;
 use Regime\Exceptions\ErrorsList;
 use Regime\Exceptions\TablePropsException;
+use Regime\Interfaces\ITable;
 use wpdb;
 
 /**
@@ -15,7 +16,7 @@ use wpdb;
  * Abstract database table class.
  * @since 0.3.6
  */
-abstract class Table
+abstract class Table implements ITable
 {
 
     /**
@@ -33,14 +34,7 @@ abstract class Table
     protected $table_props;
 
     /**
-     * Table constructor.
      * @since 0.3.6
-     * 
-     * @param wpdb $wpdb
-     * WP database object.
-     * 
-     * @param ITableProps $table_props
-     * Table properties.
      */
     public function __construct(wpdb $wpdb, ITableProps $table_props)
     {
@@ -118,15 +112,7 @@ abstract class Table
     }
 
     /**
-     * Insert the entry in the table.
      * @since 0.3.7
-     * 
-     * @param array $values
-     * Associative array. Format: column => value.
-     * 
-     * @return $this
-     * 
-     * @throws Regime\Exceptions\TableException
      */
     public function entryAdd(array $values) : self
     {
@@ -147,19 +133,7 @@ abstract class Table
     }
 
     /**
-     * Update an entry.
      * @since 0.4.0
-     * 
-     * @param array $values
-     * Associative array. Format: column => value.
-     * 
-     * @param array $conditions
-     * Values in the WHERE part united with AND.
-     * Associative array. Format: column => value.
-     * 
-     * @return $this
-     * 
-     * @throws Regime\Exceptions\TableException
      */
     public function entryUpdate(array $values, array $conditions) : self
     {
@@ -184,20 +158,7 @@ abstract class Table
     }
 
     /**
-     * Delete an entry (entries).
      * @since 0.4.0
-     * 
-     * @param array $conditions
-     * Values in the WHERE part united with AND.
-     * Associative array. Format: column => value.
-     * 
-     * @param bool $strict
-     * Determines whether the method will throw an exception
-     * if nothing is removed. 
-     * 
-     * @return $this
-     * 
-     * @throws Regime\Exceptions\TableException
      */
     public function entryDelete(array $conditions, bool $strict = true) : self
     {
@@ -224,12 +185,7 @@ abstract class Table
     }
 
     /**
-     * Select all entries from table.
      * @since 0.4.2
-     * 
-     * @return array
-     * 
-     * @throws Regime\Exceptions\TableException
      */
     public function selectAll() : array
     {

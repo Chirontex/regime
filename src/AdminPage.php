@@ -47,6 +47,13 @@ abstract class AdminPage extends PointOfEntry
     protected $table_props;
 
     /**
+     * @var \Regime\Interfaces\ITable $table
+     * Table class object.
+     * @since 0.5.6
+     */
+    protected $table;
+
+    /**
      * @since 0.0.4
      * 
      * @param string $path
@@ -79,7 +86,9 @@ abstract class AdminPage extends PointOfEntry
         $this->menuAddPage();
         
         if ($_GET['page'] ===
-            $this->container->slugGet()) $this->bootstrapAdd();
+            $this->container->slugGet()) $this
+            ->bootstrapAdd()
+            ->commonEnqueueInit();
 
     }
 
@@ -145,6 +154,30 @@ abstract class AdminPage extends PointOfEntry
                     'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js',
                 [],
                 '5.0.0-beta3'
+            );
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Initiate common styles and scripts enqueue.
+     * @since 0.5.6
+     * 
+     * @return $this
+     */
+    protected function commonEnqueueInit() : self
+    {
+
+        add_action('admin_enqueue_scripts', function() {
+
+            wp_enqueue_style(
+                'regime-common',
+                $this->url.'css/common.css',
+                [],
+                '0.2.0'
             );
 
         });

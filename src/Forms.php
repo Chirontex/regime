@@ -15,11 +15,11 @@ final class Forms extends AdminPage
 {
 
     /**
-     * @var FormsTable $forms_table
-     * Class to work with BD table.
-     * @since 0.4.3
+     * @var \Regime\Models\Tables\FormsTable $table
+     * Table object.
+     * @since 0.5.6
      */
-    protected $forms_table;
+    protected $table;
 
     /**
      * @since 0.1.4
@@ -30,12 +30,10 @@ final class Forms extends AdminPage
         if ($_GET['page'] ===
             $this->container->slugGet()) {
             
-            $this->forms_table = new FormsTable(
+            $this->table = new FormsTable(
                 $this->wpdb,
                 $this->table_props
             );
-
-            $this->enqueueFormsCommon();
                 
             $view_script = explode('/', $this->container->viewGet());
             $view_script = $view_script[count($view_script) - 1];
@@ -68,30 +66,6 @@ final class Forms extends AdminPage
             }
         
         }
-
-        return $this;
-
-    }
-
-    /**
-     * Common forms pages scripts & styles enqueue.
-     * @since 0.5.1
-     * 
-     * @return $this
-     */
-    protected function enqueueFormsCommon() : self
-    {
-
-        add_action('admin_enqueue_scripts', function() {
-
-            wp_enqueue_style(
-                'regime-forms',
-                $this->url.'css/common.css',
-                [],
-                '0.0.2'
-            );
-
-        });
 
         return $this;
 
@@ -227,7 +201,7 @@ final class Forms extends AdminPage
 
                             $id = (int)$_POST['regimeFormId'];
 
-                            $this->forms_table->updateForm($id, $fields);
+                            $this->table->updateForm($id, $fields);
 
                             $notice_text = esc_html__(
                                 'Форма успешно обновлена!',
@@ -236,7 +210,7 @@ final class Forms extends AdminPage
 
                         } else {
 
-                            $this->forms_table->addForm(
+                            $this->table->addForm(
                                 (string)$_POST['regimeFormType'],
                                 $fields
                             );
@@ -284,7 +258,7 @@ final class Forms extends AdminPage
             );
             else {
 
-                $this->forms_table->deleteForm((int)$_POST['regimeFormId']);
+                $this->table->deleteForm((int)$_POST['regimeFormId']);
 
                 $this->notice(
                     'success',
@@ -312,7 +286,7 @@ final class Forms extends AdminPage
 
             $id = (int)$_GET['fid'];
 
-            return $this->forms_table->getFormFields($id);
+            return $this->table->getFormFields($id);
 
         });
 
@@ -331,7 +305,7 @@ final class Forms extends AdminPage
 
         add_filter('regime-forms', function() {
 
-            return $this->forms_table->getAllForms();
+            return $this->table->getAllForms();
 
         });
 
