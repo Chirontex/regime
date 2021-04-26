@@ -56,10 +56,11 @@ if (empty($forms)) {
         <div class="col">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <p class="card-text">
-                        <?= esc_html__('Форма #', 'regime').$form_id ?>
-                    <br />
-                        <span class="text-muted">
+                    <div class="card-text d-flex justify-content-between align-items-center">
+                        <p>
+                            <?= esc_html__('Форма #', 'regime').$form_id ?>
+                        </p>
+                        <p class="text-muted">
 <?php
 
         switch ($form['type']) {
@@ -79,8 +80,8 @@ if (empty($forms)) {
         }
 
 ?>
-                        </span>
-                    </p>
+                        </p>
+                    </div>
                     <p class="card-text">
                         Шорткод для вставки на страницу: [regime-form id=<?= $form_id ?>]
                     </p>
