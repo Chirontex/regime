@@ -62,8 +62,8 @@ final class Main extends PointOfEntry
 
         $this->mails_table_props
             ->setField('template_id', 'CHAR(50) NOT NULL')
-            ->setField('header', 'VARCHAR(255) NOT NULL')
-            ->setField('message', 'LONGTEXT NOT NULL');
+            ->setField('header', 'VARCHAR(255)')
+            ->setField('message', 'LONGTEXT');
 
         if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false) {
 

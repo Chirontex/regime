@@ -96,6 +96,8 @@ abstract class Table implements ITable
             ErrorsList::TABLE['-30']['code']
         );
 
+        $this->init();
+
     }
 
     /**

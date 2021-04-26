@@ -60,7 +60,7 @@ class MailsTable extends Table
             ]
         )
             ->entryAdd([
-                'template_id' => 'registration',
+                'template_id' => 'password',
                 'header' => $defaults['password']['header'],
                 'message' => $defaults['password']['message']
             ]);
@@ -89,17 +89,10 @@ class MailsTable extends Table
     public function mailUpdate(string $template_id, string $header, string $message) : self
     {
 
-        foreach ([
-            'Template ID' => $template_id,
-            'Header' => $header,
-            'Message' => $message] as $key => $value) {
-
-            if (empty($value)) throw new MailsTableException(
-                sprintf(ErrorsList::COMMON['-1']['message'], $key),
-                ErrorsList::COMMON['-1']['code']
-            );
-
-        }
+        if (empty($template_id)) throw new MailsTableException(
+            sprintf(ErrorsList::COMMON['-1']['message'], 'Template ID'),
+            ErrorsList::COMMON['-1']['code']
+        );
 
         $this->entryUpdate(
             [
@@ -110,6 +103,36 @@ class MailsTable extends Table
         );
 
         return $this;
+
+    }
+
+    /**
+     * Get all mail templates.
+     * @since 0.5.7
+     * 
+     * @return array
+     */
+    public function mailsGetAll() : array
+    {
+
+        $result = [];
+
+        $select = $this->selectAll();
+
+        if (!empty($select)) {
+
+            foreach ($select as $row) {
+
+                $result[$row['template_id']] = [
+                    'header' => $row['header'],
+                    'message' => $row['message']
+                ];
+
+            }
+
+        }
+
+        return $result;
 
     }
 

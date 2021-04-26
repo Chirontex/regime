@@ -22,9 +22,16 @@ final class Mails extends AdminPage
     protected $table;
 
     /**
+     * @var array $mails
+     * Mail templates content.
+     * @since 0.5.7
+     */
+    protected $mails;
+
+    /**
      * @since 0.5.3
      */
-    protected function init(): self
+    protected function init() : self
     {
 
         if ($_GET['page'] ===
@@ -35,8 +42,57 @@ final class Mails extends AdminPage
                 $this->table_props
             );
 
+            $this->mails = $this->table->mailsGetAll();
+
+            $this->filters();
+
         }
         
+        return $this;
+
+    }
+
+    /**
+     * Add mail templates filters.
+     * @since 0.5.7
+     * 
+     * @return $this
+     */
+    protected function filters() : self
+    {
+
+        add_filter('regime-mail-registration-header', function() {
+
+            return htmlspecialchars(
+                $this->mails['registration']['header']
+            );
+
+        });
+
+        add_filter('regime-mail-registration-message', function() {
+
+            return htmlspecialchars(
+                $this->mails['registration']['message']
+            );
+
+        });
+
+        add_filter('regime-mail-password-header', function() {
+
+            return htmlspecialchars(
+                $this->mails['password']['header']
+            );
+
+        });
+
+        add_filter('regime-mail-password-message', function() {
+
+            return htmlspecialchars(
+                $this->mails['password']['message']
+            );
+
+        });
+
         return $this;
 
     }
