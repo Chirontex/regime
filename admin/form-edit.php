@@ -157,6 +157,11 @@ if (isset($_GET['fid']) &&
                             <?= esc_html__('Возможные значения:', 'regime') ?>
                         </label>
                     </div>
+                    <div id="regimeFieldEdit_css_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_css" class="form-label">
+                            <?= esc_html__('Классы CSS:', 'regime') ?>
+                        </label>
+                    </div>
                     <div id="regimeFieldEdit_multiple_block" class="mb-3" hidden="true">
                         <label for="regimeFieldEdit_multiple">
                             <?= esc_html__('Мультивыбор', 'regime') ?>

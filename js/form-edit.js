@@ -14,7 +14,8 @@ document.regimeFormEdit = {
         'multiple',
         'strict',
         'checked',
-        'required'
+        'required',
+        'css'
     ],
     fieldsCount: 0,
     fields: {},
@@ -37,6 +38,7 @@ document.regimeFormEdit = {
             field.position = ++document.regimeFormEdit.fieldsCount;
             field.bound = bound;
             field.class = 'table-'+color;
+            field.css = '';
 
             if (type != 'reset')
             {
@@ -103,7 +105,8 @@ document.regimeFormEdit = {
 
                 if (prop == 'options' ||
                     prop == 'multiple' ||
-                    prop == 'strict') continue;
+                    prop == 'strict' ||
+                    prop == 'css') continue;
 
                 row.appendChild(
                     document.regimeFormEdit.methods.propCellRender(
@@ -172,6 +175,8 @@ document.regimeFormEdit = {
 
             document.getElementById('regimeFieldEdit_fieldId_block')
                 .appendChild(input);
+
+            methods.modalInputRender(fieldId, 'css');
 
             if (type != 'checkbox' &&
                 type != 'radio') methods
@@ -282,6 +287,11 @@ document.regimeFormEdit = {
                         for (let p = 0; p < field[fieldProps[i]].length; p++)
                         {
                             option = field[fieldProps[i]][p].trim();
+                            option = option.replace('\n', '');
+                            option = option.replace('\r', '');
+                            option = option.replace('\t', '');
+                            option = option.replace('\0', '');
+                            option = option.replace('\v', '');
 
                             if (option != '') handledList[p] = option;
                         }

@@ -86,7 +86,7 @@ final class Forms extends AdminPage
 
             wp_enqueue_style(
                 'regime-forms',
-                $this->url.'css/forms.css',
+                $this->url.'css/common.css',
                 [],
                 '0.0.2'
             );
@@ -143,7 +143,7 @@ final class Forms extends AdminPage
                 'regime-form-edit',
                 $this->url.'js/form-edit.js',
                 [],
-                '0.6.9',
+                '0.7.3',
             );
 
         });
