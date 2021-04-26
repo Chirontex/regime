@@ -105,6 +105,19 @@ abstract class Table
     }
 
     /**
+     * Fires after object was created.
+     * @since 0.5.4
+     * 
+     * @return $this
+     */
+    protected function init() : self
+    {
+
+        return $this;
+
+    }
+
+    /**
      * Insert the entry in the table.
      * @since 0.3.7
      * 
