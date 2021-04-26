@@ -22,11 +22,11 @@ class MailsTable extends Table
 
         $defaults = [
             'registration' => [
-                'header' => 'Вы успешно зарегистрированы!',
+                'header' => esc_html__('Вы успешно зарегистрированы!', 'regime'),
                 'message' => ''
             ],
             'password' => [
-                'header' => 'Запрос на восстановление пароля',
+                'header' => esc_html__('Запрос на восстановление пароля', 'regime'),
                 'message' => ''
             ]
         ];
@@ -34,9 +34,9 @@ class MailsTable extends Table
         ob_start();
 
 ?>
-<h3>Поздравляем! Вы зарегистрированы на нашем сайте!</h3>
-<p>Для входа используйте логин и пароль, которые вы указали при регистрации.</p>
-<p>С уважением, администрация сайта !%site_name%!.</p>
+<h3><?= esc_html('Поздравляем! Вы зарегистрированы на нашем сайте!', 'regime') ?></h3>
+<p><?= esc_html__('Для входа используйте логин и пароль, которые вы указали при регистрации.', 'regime') ?></p>
+<p><?= esc_html__('С уважением, администрация сайта', 'regime') ?> !%site_name%!.</p>
 <?php
 
         $defaults['registration']['message'] = ob_get_clean();
@@ -44,9 +44,9 @@ class MailsTable extends Table
         ob_start();
 
 ?>
-<p>Получен запрос на восстановление пароля.</p>
-<p>Пожалуйста, перейдите по этой ссылке для восстановления: !%password_restorage_link%!</p>
-<p>С уважением, администрация сайта !%site_name%!.</p>
+<p><?= esc_html__('Получен запрос на восстановление пароля.', 'regime') ?></p>
+<p><?= esc_html__('Пожалуйста, перейдите по этой ссылке для восстановления:', 'regime') ?> !%password_restorage_link%!</p>
+<p><?= esc_html__('С уважением, администрация сайта', 'regime') ?> !%site_name%!.</p>
 <?php
 
         $defaults['password']['message'] = ob_get_clean();
