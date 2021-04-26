@@ -154,6 +154,12 @@ final class Main extends PointOfEntry
 
     }
 
+    /**
+     * Initialize mail templates page.
+     * @since 0.5.3
+     * 
+     * @return $this
+     */
     protected function mailsInit() : self
     {
 

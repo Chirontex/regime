@@ -15,7 +15,7 @@ final class Mails extends AdminPage
 {
 
     /**
-     * @var MailsTable $mails_table
+     * @var MailsTable $table
      * Class to work with DB table.
      * @since 0.5.6
      */
@@ -42,9 +42,9 @@ final class Mails extends AdminPage
                 $this->table_props
             );
 
-            $this->mails = $this->table->mailsGetAll();
+            if (isset($_POST['regimeMailsEdit-wpnp'])) $this->mailsSave();
 
-            $this->filters();
+            $this->getMails()->filters();
 
         }
         
@@ -90,6 +90,70 @@ final class Mails extends AdminPage
             return htmlspecialchars(
                 $this->mails['password']['message']
             );
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Save mail templates.
+     * @since 0.5.8
+     * 
+     * @return $this
+     */
+    protected function mailsSave() : self
+    {
+
+        add_action('plugins_loaded', function() {
+
+            if (wp_verify_nonce(
+                $_POST['regimeMailsEdit-wpnp'],
+                'regimeMailsEdit'
+            ) === false) $this->notice(
+                'danger',
+                $this->nonce_fail_message
+            );
+            else {
+
+                $this->table
+                    ->mailUpdate(
+                        'registration',
+                        (string)$_POST['regimeMailRegistrationHeader'],
+                        (string)$_POST['regimeMailRegistrationMessage']
+                    )
+                    ->mailUpdate(
+                        'password',
+                        (string)$_POST['regimeMailPasswordHeader'],
+                        (string)$_POST['regimeMailPasswordMessage']
+                    );
+
+                $this->notice(
+                    'success',
+                    esc_html__('Шаблоны сохранены!', 'regime')
+                );
+
+            }
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Get mail templates content.
+     * @since 0.5.8
+     * 
+     * @return $this
+     */
+    protected function getMails() : self
+    {
+
+        add_action('init', function() {
+
+            $this->mails = $this->table->mailsGetAll();
 
         });
 
