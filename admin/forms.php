@@ -83,7 +83,7 @@ if (empty($forms)) {
                         </p>
                     </div>
                     <p class="card-text">
-                        Шорткод для вставки на страницу: [regime-form id=<?= $form_id ?>]
+                        <?= esc_html__('Шорткод для вставки на страницу', 'regime') ?>: [regime-form id=<?= $form_id ?>]
                     </p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
