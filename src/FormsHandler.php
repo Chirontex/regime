@@ -49,6 +49,12 @@ final class FormsHandler extends GlobalHandler
 
     }
 
+    /**
+     * Handle registration forms.
+     * @since 0.6.6
+     * 
+     * @return $this
+     */
     protected function registration() : self
     {
 
@@ -137,7 +143,14 @@ final class FormsHandler extends GlobalHandler
                 );
                 elseif (isset($userdata['user_email'])) {
 
-                    //
+                    $template = $this->getMailTemplate('registration');
+
+                    wp_mail(
+                        $userdata['user_email'],
+                        $template['header'],
+                        $template['message'],
+                        ['Content-type: text/html; charset=utf-8']
+                    );
 
                 }
 
