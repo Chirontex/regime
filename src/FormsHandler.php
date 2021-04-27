@@ -45,6 +45,8 @@ final class FormsHandler extends GlobalHandler
             'regime'
         );
 
+        if (isset($_POST['regimeForm-registration'])) $this->registration();
+
         return $this;
 
     }

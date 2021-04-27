@@ -75,7 +75,9 @@ final class Main extends PointOfEntry
 
         }
 
-        $this->frontendShortcodesInit();
+        $this
+            ->frontendShortcodesInit()
+            ->formsHandlerInit();
         
         return $this;
 
@@ -216,6 +218,28 @@ final class Main extends PointOfEntry
             $this->path,
             $this->url,
             ['forms' => $this->forms_table_props]
+        );
+
+        return $this;
+
+    }
+
+    /**
+     * Initialize forms handler object.
+     * @since 0.6.7
+     * 
+     * @return $this
+     */
+    protected function formsHandlerInit() : self
+    {
+
+        new FormsHandler(
+            $this->path,
+            $this->url,
+            [
+                'forms' => $this->forms_table_props,
+                'mails' => $this->mails_table_props
+            ]
         );
 
         return $this;
