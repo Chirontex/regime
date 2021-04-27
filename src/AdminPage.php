@@ -6,6 +6,7 @@ namespace Regime;
 
 use Regime\Interfaces\IAdminMenuPage;
 use Regime\Interfaces\ITableProps;
+use Regime\Traits\Noticer;
 
 /**
  * @abstract
@@ -14,6 +15,8 @@ use Regime\Interfaces\ITableProps;
  */
 abstract class AdminPage extends PointOfEntry
 {
+
+    use Noticer;
 
     /**
      * @var array $notice_container
@@ -210,15 +213,10 @@ abstract class AdminPage extends PointOfEntry
 
         add_action('regime-admin-page-notice', function() {
 
-            ob_start();
-
-?>
-<div class="notice notice-<?= htmlspecialchars($this->notice_container['type']) ?> is-dismissible" style="max-width: 500px; margin: 1rem auto;">
-    <p style="text-align: center;"><?= $this->notice_container['text'] ?></p>
-</div>
-<?php
-
-            echo ob_get_clean();
+            $this->standartNoticeEcho(
+                $this->notice_container['type'],
+                $this->notice_container['text']
+            );
 
         });
 
