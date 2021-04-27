@@ -6,6 +6,7 @@ namespace Regime;
 
 use Regime\Containers\AdminMenuPage;
 use Regime\Containers\TableProps;
+use Regime\Models\Tables\FormsTable;
 
 /**
  * @final
@@ -74,6 +75,8 @@ final class Main extends PointOfEntry
                 ->submenuRemove();
 
         }
+
+        $this->shortcodeInit();
         
         return $this;
 
@@ -201,12 +204,195 @@ final class Main extends PointOfEntry
 
     }
 
+    /**
+     * Initialize the shorcode.
+     * @since 0.6.0
+     * 
+     * @return $this
+     */
     protected function shortcodeInit() : self
     {
 
-        add_shortcode('regime-form', function() {
+        add_shortcode('regime-form', function($atts) {
 
+            $atts = shortcode_atts([
+                'id' => ''
+            ], $atts);
 
+            $result = '';
+
+            if (!empty($atts['id'])) {
+
+                $id = (int)$atts['id'];
+
+                $forms_table = new FormsTable(
+                    $this->wpdb,
+                    $this->forms_table_props
+                );
+
+                $form = $forms_table->getForm($id);
+
+                if (!empty($form['action']) &&
+                    !empty($form['fields'])) {
+
+                    $fields = json_decode($form['fields'], true);
+
+                    $fields_enqueue = [];
+
+                    foreach ($fields as $field_id => $props) {
+
+                        $fields_enqueue[$field_id] = (int)$props['position'];
+
+                    }
+
+                    asort($fields_enqueue, SORT_NUMERIC);
+
+                    $fields_enqueue = array_flip($fields_enqueue);
+
+                    ob_start();
+
+?>
+<form action="<?= $form['type'] === 'authorization' && $_GET['restore'] === 'true' ? '' : $form['action'] ?>" method="post" id="regimeForm_<?= $id ?>">
+<?php
+
+                    wp_nonce_field('regimeForm', 'regimeForm-wpnp');
+
+                    foreach ($fields_enqueue as $field_id) {
+
+?>
+    <div id="regimeFormField_<?= $field_id ?>_container">
+<?php
+
+                        $type = explode('_', $field_id);
+                        $type = $type[0];
+
+                        if (!empty($fields[$field_id]['label']) &&
+                            $type !== 'reset') {
+
+?>
+        <label for="regimeFormField_<?= $field_id ?>"><?= htmlspecialchars($fields[$field_id]['label']) ?></label>
+<?php
+
+                        }
+
+                        $field = '<';
+
+                        if ($type === 'textarea' ||
+                            $type === 'select') $tag = $type;
+                        elseif ($type === 'reset') $tag = 'button';
+                        else $tag = 'input';
+
+                        $field .= $tag;
+
+                        if ($type !==
+                            'textarea') $field .= ' type="'.$type.'"';
+
+                        $field .= ' id="regimeFormField_'.$field_id.
+                            '" name="regimeFormField_'.$field_id.'"';
+
+                        $field .= ' class="'.$fields[$field_id]['css'].'"';
+
+                        if ($type === 'datalist') $field .= ' list="regimeFormField_'.
+                            $field_id.'_datalist"';
+
+                        if ($tag !== 'button' &&
+                            $tag !== 'select') $field .= ' placeholder="'.
+                            $fields[$field_id]['placeholder'].'"';
+
+                        if ($type !== 'select' &&
+                            $type !== 'textarea' &&
+                            $type !== 'reset' &&
+                            $type !== 'checkbox' &&
+                            $type !== 'radio' &&
+                            !empty($fields[$field_id]['value'])) $field .= ' value="'.
+                                $fields[$field_id]['value'].'"';
+
+                        if ($fields[$field_id]['checked'] === true) $field .= ' checked="true"';
+
+                        if ($fields[$field_id]['bound'] === true ||
+                            $fields[$field_id]['required'] === true) $field .= ' required="true">'.PHP_EOL;
+
+                        if ($type ===
+                            'textarea') $field .= htmlspecialchars($fields[$field_id]['value']).PHP_EOL.'</textarea>'.PHP_EOL;
+                        elseif ($type ===
+                            'reset') $field .= htmlspecialchars($fields[$field_id]['placeholder']).PHP_EOL.'</button>'.PHP_EOL;
+
+                        if ($type === 'select' ||
+                            $type === 'datalist') {
+
+                            if ($type === 'datalist') $field .= '<datalist id="regimeFormField_'.
+                                $field_id.'_datalist">'.PHP_EOL;
+
+                            if ($type === 'select' &&
+                                !empty($fields[$field_id]['placeholder'])) {
+
+                                $field .= '<option value="">'.
+                                    htmlspecialchars(
+                                        $fields[$field_id]['placeholder']
+                                    ).'</option>';
+
+                            }
+
+                            foreach ($fields[$field_id]['options'] as $value) {
+
+                                $field .= '<option value="'.$value.'"'.
+                                    ($value ===
+                                        $fields[$field_id]['value'] &&
+                                        $type === 'select' ?
+                                            ' selected="true"': ''
+                                    ).'>'.($type === 'select' ?
+                                        htmlspecialchars($value).'</option>' :
+                                        '').PHP_EOL;
+
+                            }
+
+                            if ($type === 'datalist') $field .= '</datalist>';
+                            elseif ($type === 'select') $field .= '</select>';
+
+                            $field .= PHP_EOL;
+
+                        }
+
+                        echo $field;
+
+?>
+    </div>
+<?php
+
+                    }
+
+?>
+    <button type="submit">
+<?php
+
+        switch ($form['type']) {
+
+            case 'registration':
+                esc_html_e('Зарегистрироваться', 'regime');
+                break;
+
+            case 'authorization':
+                esc_html_e('Войти', 'regime');
+                break;
+
+            case 'profile':
+                esc_html_e('Сохранить', 'regime');
+                break;
+
+        }
+
+?>
+    </button>
+</form>
+<?php
+
+                    $result = ob_get_clean();
+
+                }
+
+            }
+
+            return $result;
 
         });
 

@@ -1,1 +1,1 @@
-# Regime 0.5.9
+# Regime 0.6.0
