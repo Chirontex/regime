@@ -76,7 +76,7 @@ final class FrontendShortcodes extends GlobalHandler
 ?>
 <p>
     <?= esc_html__('Вы авторизованы.', 'regime') ?> 
-    <a href="<?= wp_logout_url() ?>"><?= esc_html__('Выйти', 'regime') ?></a>
+    <a href="<?= wp_logout_url($_SERVER['REQUEST_URI']) ?>"><?= esc_html__('Выйти', 'regime') ?></a>
 </p>
 <?php
                         
