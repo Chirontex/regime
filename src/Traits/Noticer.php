@@ -26,6 +26,27 @@ trait Noticer
     protected function standartNoticeEcho(string $type, string $text) : self
     {
 
+        echo $this->standartNotice($type, $text);
+
+        return $this;
+
+    }
+
+    /**
+     * Return standart notice alert.
+     * @since 0.6.4
+     * 
+     * @param string $type
+     * Available types: 'success', 'warning', 'error' (or 'danger').
+     * 
+     * @param string $text
+     * Notice text.
+     * 
+     * @return string
+     */
+    protected function standartNotice(string $type, string $text) : string
+    {
+
         ob_start();
 
 ?>
@@ -34,9 +55,7 @@ trait Noticer
 </div>
 <?php
 
-        echo ob_get_clean();
-
-        return $this;
+        return ob_get_clean();
 
     }
 

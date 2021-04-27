@@ -90,10 +90,12 @@ final class FrontendShortcodes extends GlobalHandler
                         $type = $type[0];
 
                         if (!empty($fields[$field_id]['label']) &&
-                            $type !== 'reset') {
+                            $type !== 'reset' &&
+                            $type !== 'checkbox' &&
+                            $type !== 'radio') {
 
 ?>
-        <p><label for="regimeFormField_<?= $field_id ?>"><?= htmlspecialchars($fields[$field_id]['label']) ?></label></p>
+        <p><label for="regimeFormField_<?= $field_id ?>" id="regimeFormField_<?= $field_id ?>_label"><?= htmlspecialchars($fields[$field_id]['label']) ?></label></p>
 <?php
 
                         }
@@ -129,6 +131,9 @@ final class FrontendShortcodes extends GlobalHandler
                             $type !== 'radio' &&
                             !empty($fields[$field_id]['value'])) $field .= ' value="'.
                                 $fields[$field_id]['value'].'"';
+
+                        if ($type === 'checkbox' ||
+                            $type === 'radio') $field .= ' value="'.$field_id.'"';
 
                         if ($fields[$field_id]['checked'] === true) $field .= ' checked="true"';
 
@@ -177,6 +182,15 @@ final class FrontendShortcodes extends GlobalHandler
                         }
 
                         echo $field;
+
+                        if (!empty($fields[$field_id]['label']) &&
+                            ($type === 'checkbox' || $type === 'radio')) {
+
+?>
+        <label for="regimeFormField_<?= $field_id ?>" id="regimeFormField_<?= $field_id ?>_label"><?= htmlspecialchars($fields[$field_id]['label']) ?></label>
+<?php
+
+                        }
 
 ?>
     </div>
