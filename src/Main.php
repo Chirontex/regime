@@ -253,6 +253,7 @@ final class Main extends PointOfEntry
 
 ?>
 <form action="<?= $form['type'] === 'authorization' && $_GET['restore'] === 'true' ? '' : $form['action'] ?>" method="post" id="regimeForm_<?= $id ?>">
+    <input type="hidden" name="regimeFormField_formId" value="<?= $id ?>">
 <?php
 
                     wp_nonce_field('regimeForm-'.$form['type'], 'regimeForm-'.$form['type'].'-wpnp');
@@ -270,7 +271,7 @@ final class Main extends PointOfEntry
                             $type !== 'reset') {
 
 ?>
-        <label for="regimeFormField_<?= $field_id ?>"><?= htmlspecialchars($fields[$field_id]['label']) ?></label>
+        <p><label for="regimeFormField_<?= $field_id ?>"><?= htmlspecialchars($fields[$field_id]['label']) ?></label></p>
 <?php
 
                         }
@@ -362,7 +363,8 @@ final class Main extends PointOfEntry
                     }
 
 ?>
-    <button type="submit">
+    <div id="regimeForm_<?= $field_id ?>_submit">
+        <button type="submit">
 <?php
 
         switch ($form['type']) {
@@ -382,7 +384,8 @@ final class Main extends PointOfEntry
         }
 
 ?>
-    </button>
+        </button>
+    </div>
 </form>
 <?php
 
