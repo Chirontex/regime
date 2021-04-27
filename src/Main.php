@@ -56,7 +56,7 @@ final class Main extends PointOfEntry
         $this->forms_table_props
             ->setField('form_id', 'BIGINT(20) UNSIGNED NOT NULL')
             ->setField('key', 'VARCHAR(255) NOT NULL')
-            ->setField('value', 'LONGTEXT NOT NULL');
+            ->setField('value', 'LONGTEXT');
 
         $this->mails_table_props = new TableProps('regime_mails');
 
@@ -194,6 +194,19 @@ final class Main extends PointOfEntry
         add_action('admin_menu', function() {
 
             remove_submenu_page('regime', 'regime');
+
+        });
+
+        return $this;
+
+    }
+
+    protected function shortcodeInit() : self
+    {
+
+        add_shortcode('regime-form', function() {
+
+
 
         });
 

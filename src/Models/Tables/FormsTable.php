@@ -25,11 +25,14 @@ class FormsTable extends Table
      * @param string $fields
      * Form fields in JSON format.
      * 
+     * @param string $action
+     * Form action URI.
+     * 
      * @return $this
      * 
      * @throws Regime\Exceptions\FormsTableException
      */
-    public function addForm(string $type, string $fields) : self
+    public function addForm(string $type, string $fields, string $action) : self
     {
 
         $invalid_param = '';
@@ -60,6 +63,11 @@ class FormsTable extends Table
                 ])
                 ->entryAdd([
                     'form_id' => $id,
+                    'key' => 'action',
+                    'value' => $action
+                ])
+                ->entryAdd([
+                    'form_id' => $id,
                     'key' => 'status',
                     'value' => 'active'
                 ]);
@@ -87,11 +95,14 @@ class FormsTable extends Table
      * @param string $fields
      * Form fields in JSON format.
      * 
+     * @param string $action
+     * Form action URI.
+     * 
      * @return $this
      * 
      * @throws Regime\Exceptions\FormsTableException
      */
-    public function updateForm(int $form_id, string $fields) : self
+    public function updateForm(int $form_id, string $fields, string $action) : self
     {
 
         if ($form_id < 1) throw new FormsTableException(
@@ -106,13 +117,21 @@ class FormsTable extends Table
 
         try {
 
-            $this->entryUpdate(
-                ['value' => $fields],
-                [
-                    'form_id' => $form_id,
-                    'key' => 'fields'
-                ]
-            );
+            $this
+                ->entryUpdate(
+                    ['value' => $fields],
+                    [
+                        'form_id' => $form_id,
+                        'key' => 'fields'
+                    ]
+                )
+                ->entryUpdate(
+                    ['value' => $action],
+                    [
+                        'form_id' => $form_id,
+                        'key' => 'action'
+                    ]
+                );
 
         } catch (TableException $e) {
 
@@ -237,6 +256,44 @@ class FormsTable extends Table
                         $this->table_props->getTableName()."` AS t
                     WHERE t.form_id = %d
                     AND t.key = 'fields'",
+                $form_id
+                ),
+            ARRAY_A
+        );
+
+        if (!empty($select)) $result = $select[0]['value'];
+
+        return $result;
+
+    }
+
+    /**
+     * Get form action URI.
+     * @since 0.5.9
+     * 
+     * @param int $form_id
+     * 
+     * @return string
+     * 
+     * @throws Regime\Exceptions\FormsTableException
+     */
+    public function getFormAction(int $form_id) : string
+    {
+
+        if ($form_id < 1) throw new FormsTableException(
+            ErrorsList::COMMON['-2']['message'],
+            ErrorsList::COMMON['-2']['code']
+        );
+
+        $result = '';
+
+        $select = $this->wpdb->get_results(
+            $this->wpdb->prepare(
+                "SELECT t.value
+                    FROM `".$this->wpdb->prefix.
+                        $this->table_props->getTableName()."` AS t
+                    WHERE t.form_id = %d
+                    AND t.key = 'action'",
                 $form_id
                 ),
             ARRAY_A

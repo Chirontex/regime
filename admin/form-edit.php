@@ -52,6 +52,10 @@ if (isset($_GET['fid']) &&
         </form>
         <button class="button button-primary" onclick="document.regimeFormEdit.methods.allFormSave();"><?= esc_html__('Сохранить форму', 'regime') ?></button>
     </div>
+    <div class="text-center mx-auto mb-5" style="max-width: 400px;">
+        <label for="regimeFormAction" class="form-label"><?= esc_html__('Страница возврата:', 'regime') ?></label>
+        <input type="text" id="regimeFormAction" class="form-control form-control-sm" placeholder="<?= esc_attr__('Оставьте пустой для перенаправления на страницу формы', 'regime') ?>" value="<?= apply_filters('regime-exist-form-action', '') ?>">
+    </div>
     <div class="row mb-5">
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
             <h4 class="text-center mb-5">

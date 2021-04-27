@@ -31,13 +31,13 @@ if (!defined('ABSPATH')) die;
                     <label for="regimeMailPasswordMessage" class="form-label"><?= esc_html__('Тело письма:', 'regime') ?></label>
                     <textarea name="regimeMailPasswordMessage" id="regimeMailPasswordMessage" cols="30" rows="10" class="form-control form-control-sm"><?= apply_filters('regime-mail-password-message', '') ?></textarea>
                 </div>
-                <div class="text-center">
+                <div class="text-center mb-5">
                     <button type="submit" class="button button-primary"><?= esc_html__('Сохранить', 'regime') ?></button>
                 </div>
             </form>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            <h5 class="text-center mb-5"><?= esc_html__('Доступные шорткоды', 'regime') ?></h5>
+            <h5 class="mb-5"><?= esc_html__('Доступные шорткоды:', 'regime') ?></h5>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item"><span class="fst-italic">!%site_url%!</span> — <?= esc_html__('адрес сайта', 'regime') ?></li>
                 <li class="list-group-item"><span class="fst-italic">!%site_name%!</span> — <?= esc_html__('название сайта', 'regime') ?></li>

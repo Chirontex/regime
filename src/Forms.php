@@ -201,7 +201,11 @@ final class Forms extends AdminPage
 
                             $id = (int)$_POST['regimeFormId'];
 
-                            $this->table->updateForm($id, $fields);
+                            $this->table->updateForm(
+                                $id,
+                                $fields,
+                                (string)$_POST['regimeFormAction']
+                            );
 
                             $notice_text = esc_html__(
                                 'Форма успешно обновлена!',
@@ -212,7 +216,8 @@ final class Forms extends AdminPage
 
                             $this->table->addForm(
                                 (string)$_POST['regimeFormType'],
-                                $fields
+                                $fields,
+                                (string)$_POST['regimeFormAction']
                             );
 
                             $notice_text = esc_html__(
@@ -287,6 +292,14 @@ final class Forms extends AdminPage
             $id = (int)$_GET['fid'];
 
             return $this->table->getFormFields($id);
+
+        });
+
+        add_filter('regime-exist-form-action', function() {
+
+            $id = (int)$_GET['fid'];
+
+            return $this->table->getFormAction($id);
 
         });
 

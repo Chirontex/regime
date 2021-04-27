@@ -17,6 +17,7 @@ document.regimeFormEdit = {
         'required',
         'css'
     ],
+    action: '',
     fieldsCount: 0,
     fields: {},
     methods: {
@@ -402,6 +403,14 @@ document.regimeFormEdit = {
         allFormSave: () => {
             const postForm = document.getElementById('regimeFormSave');
             const fields = document.regimeFormEdit.fields;
+            const actionInput = document.getElementById('regimeFormAction');
+            const actionOutput = document.createElement('input');
+
+            actionOutput.setAttribute('type', 'hidden');
+            actionOutput.setAttribute('name', 'regimeFormAction');
+            actionOutput.setAttribute('value', actionInput.value);
+
+            postForm.appendChild(actionOutput);
 
             const invalidFields = {};
 
