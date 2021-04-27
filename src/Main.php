@@ -255,7 +255,7 @@ final class Main extends PointOfEntry
 <form action="<?= $form['type'] === 'authorization' && $_GET['restore'] === 'true' ? '' : $form['action'] ?>" method="post" id="regimeForm_<?= $id ?>">
 <?php
 
-                    wp_nonce_field('regimeForm', 'regimeForm-wpnp');
+                    wp_nonce_field('regimeForm-'.$form['type'], 'regimeForm-'.$form['type'].'-wpnp');
 
                     foreach ($fields_enqueue as $field_id) {
 
