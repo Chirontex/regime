@@ -114,4 +114,11 @@ class ErrorsList
         ]
     ];
 
+    const GLOBAL_HANDLER = [
+        '-50' => [
+            'message' => 'Tables properties list may content only ITableProps objects.',
+            'code' => -50
+        ]
+    ];
+
 }

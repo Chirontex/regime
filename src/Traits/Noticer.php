@@ -4,6 +4,10 @@
  */
 namespace Regime\Traits;
 
+/**
+ * Add noticing methods.
+ * @since 0.6.2
+ */
 trait Noticer
 {
 
