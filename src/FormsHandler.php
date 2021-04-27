@@ -45,7 +45,7 @@ final class FormsHandler extends GlobalHandler
             'regime'
         );
 
-        if (isset($_POST['regimeForm-registration'])) $this->registration();
+        if (isset($_POST['regimeForm-registration-wpnp'])) $this->registration();
 
         return $this;
 
@@ -60,11 +60,11 @@ final class FormsHandler extends GlobalHandler
     protected function registration() : self
     {
 
-        add_action('plugins_loadded', function() {
+        add_action('plugins_loaded', function() {
 
             if (wp_verify_nonce(
-                $_POST['regimeForm-registration'],
-                'regimeForm-registration-wpnp'
+                $_POST['regimeForm-registration-wpnp'],
+                'regimeForm-registration'
             ) === false) $this->notice(
                 'danger',
                 $this->nonce_fail_notice
@@ -129,11 +129,13 @@ final class FormsHandler extends GlobalHandler
 
                 }
 
+                $userdata['show_admin_bar_front'] = 'false';
+
                 if (!isset($userdata['user_login']) &&
                     isset($userdata['user_email'])) {
 
                    $userdata['user_login'] = explode('@', $userdata['user_email']);
-                   $userdata['user_login'] =$userdata['user_login'][0];
+                   $userdata['user_login'] = $userdata['user_login'][0];
 
                 }
 
@@ -143,16 +145,48 @@ final class FormsHandler extends GlobalHandler
                     'danger',
                     $insert->get_error_message()
                 );
-                elseif (isset($userdata['user_email'])) {
+                else {
 
-                    $template = $this->getMailTemplate('registration');
+                    foreach ($userdata as $metaname => $metadata) {
 
-                    wp_mail(
-                        $userdata['user_email'],
-                        $template['header'],
-                        $template['message'],
-                        ['Content-type: text/html; charset=utf-8']
+                        if ($metaname !== 'user_login' &&
+                            $metaname !== 'user_pass' &&
+                            $metaname !== 'user_nicename' &&
+                            $metaname !== 'user_email' &&
+                            $metaname !== 'user_url' &&
+                            $metaname !== 'user_registered' &&
+                            $metaname !== 'user_activation_key' &&
+                            $metaname !== 'user_status' &&
+                            $metaname !== 'display_name') {
+
+                            add_user_meta(
+                                $insert,
+                                $metaname,
+                                $metadata,
+                                true
+                            );
+
+                        }
+
+                    }
+
+                    $this->notice(
+                        'success',
+                        esc_html__('Регистрация завершена!', 'regime')
                     );
+                
+                    if (isset($userdata['user_email'])) {
+
+                        $template = $this->getMailTemplate('registration');
+
+                        wp_mail(
+                            $userdata['user_email'],
+                            $template['header'],
+                            $template['message'],
+                            ['Content-type: text/html; charset=utf-8']
+                        );
+
+                    }
 
                 }
 

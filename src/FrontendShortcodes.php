@@ -41,8 +41,6 @@ final class FrontendShortcodes extends GlobalHandler
                 'id' => ''
             ], $atts);
 
-            $result = '';
-
             if (!empty($atts['id'])) {
 
                 $id = (int)$atts['id'];
@@ -54,8 +52,37 @@ final class FrontendShortcodes extends GlobalHandler
 
                 $form = $forms_table->getForm($id);
 
-                if (!empty($form['action']) &&
+                if (isset($form['action']) &&
                     !empty($form['fields'])) {
+
+                    if ($form['type'] === 'profile') {
+
+                        if (get_current_user_id() === 0) {
+
+                            ob_start();
+
+?>
+<p><?= esc_html__('Авторизуйтесь, чтобы просматривать контент данной страницы.', 'regime') ?></p>
+<?php
+
+                            return ob_get_clean();
+
+                        }
+
+                    } elseif (get_current_user_id() !== 0) {
+
+                        ob_start();
+
+?>
+<p>
+    <?= esc_html__('Вы авторизованы.', 'regime') ?> 
+    <a href="<?= wp_logout_url() ?>"><?= esc_html__('Выйти', 'regime') ?></a>
+</p>
+<?php
+                        
+                        return ob_get_clean();
+
+                    }
 
                     $fields = json_decode($form['fields'], true);
 
@@ -225,13 +252,11 @@ final class FrontendShortcodes extends GlobalHandler
 </form>
 <?php
 
-                    $result = ob_get_clean();
+                    return ob_get_clean();
 
                 }
 
             }
-
-            return $result;
 
         });
 
