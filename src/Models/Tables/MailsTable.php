@@ -136,4 +136,41 @@ class MailsTable extends Table
 
     }
 
+    /**
+     * Get mail template by template ID.
+     * @since 0.6.5
+     * 
+     * @param string $template_id
+     * 
+     * @return array
+     * 
+     * @throws Regime\Exceptions\MailsTableException
+     */
+    public function mailGetByTemplate(string $template_id) : array
+    {
+
+        if (empty($template_id)) throw new MailsTableException(
+            sprintf(ErrorsList::COMMON['-1']['message'], 'Template ID'),
+            ErrorsList::COMMON['-1']['code']
+        );
+
+        $result = [];
+
+        $select = $this->wpdb->get_results(
+            $this->wpdb->prepare(
+                "SELECT *
+                    FROM `".$this->wpdb->prefix.
+                        $this->table_props->getTableName()."` AS t
+                    WHERE t.template_id = %s",
+                $template_id
+            ),
+            ARRAY_A
+        );
+
+        if (!empty($select)) $result = $select[0];
+
+        return $result;
+
+    }
+
 }

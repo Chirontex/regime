@@ -7,6 +7,7 @@ namespace Regime;
 use Regime\Traits\Noticer;
 use Regime\Models\Tables\FormsTable;
 use Regime\Models\Tables\MailsTable;
+use WP_Error;
 
 /**
  * @final
@@ -101,21 +102,88 @@ final class FormsHandler extends GlobalHandler
 
                 $fields = json_decode($form['fields'], true);
 
-                $user_data = [];
+                $userdata = [];
 
                 foreach ($fields as $field_id => $props) {
 
-                    // do later
+                    $type = explode('_', $field_id);
+                    $type = $type[0];
+
+                    if ($type !== 'reset') {
+
+                        if ($type ===
+                            'checkbox') $userdata[$props['key']] = isset(
+                                $_POST['regimeFormField_'.$field_id]
+                            ) ? 'true' : 'false';
+                        else $userdata[$props['key']] = (string)$_POST['regimeFormField_'.$field_id];
+
+                    }
 
                 }
 
-                // do later
+                if (!isset($userdata['user_login']) &&
+                    isset($userdata['user_email'])) {
+
+                   $userdata['user_login'] = explode('@', $userdata['user_email']);
+                   $userdata['user_login'] =$userdata['user_login'][0];
+
+                }
+
+                $insert = wp_insert_user($userdata);
+
+                if ($insert instanceof WP_Error) $this->notice(
+                    'danger',
+                    $insert->get_error_message()
+                );
+                elseif (isset($userdata['user_email'])) {
+
+                    //
+
+                }
 
             }
 
         });
 
         return $this;
+
+    }
+
+    /**
+     * Return mail template data by template ID.
+     * @since 0.6.5
+     * 
+     * @param string $template_id
+     * Template ID. Cannot be empty.
+     * 
+     * @return array
+     * Empty if template was not found.
+     */
+    protected function getMailTemplate(string $template_id) : array
+    {
+
+        $mails_table = new MailsTable(
+            $this->wpdb,
+            $this->tables_props['mails']
+        );
+
+        $template = $mails_table->mailGetByTemplate($template_id);
+
+        if (!empty($template)) {
+
+            foreach (['header', 'message'] as $entity) {
+
+                $template[$entity] = str_replace(
+                    ['!%site_url%!', '!%site_name%!'],
+                    [site_url(), get_bloginfo('name')],
+                    $template[$entity]
+                );
+
+            }
+
+        }
+
+        return $template;
 
     }
 
