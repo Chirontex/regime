@@ -82,10 +82,11 @@ final class FrontendShortcodes extends GlobalHandler
                         
                         return ob_get_clean();
 
-                    } elseif ($form['type'] === 'authorization' &&
-                        $_GET['regime'] === 'restore') {
+                    } elseif ($form['type'] === 'authorization') {
 
-                        ob_start();
+                        if ($_GET['regime'] === 'restore') {
+
+                            ob_start();
 
 ?>
 <form action="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>" method="post" id="regimeForm_restore">
@@ -94,7 +95,7 @@ final class FrontendShortcodes extends GlobalHandler
         <p><label id="regimeFormField_user_email_label" for="regimeFormField_user_email">
             <?= esc_html__('Пожалуйста, введите ваш e-mail:', 'regime') ?>
         </label></p>
-        <input type="email" name="regimeFormField_user_email" id="regimeFormField_user_email" placeholder="<?= esc_html__('ваш e-mail', 'regime') ?>" required="true">
+        <input type="email" name="regimeFormField_user_email" id="regimeFormField_user_email" placeholder="<?= esc_attr__('ваш e-mail', 'regime') ?>" required="true">
     </div>
     <div id="regimeForm_restore_submit" style="margin-top: 1rem;">
         <button type="submit"><?= esc_html__('Отправить', 'regime') ?></button>
@@ -102,7 +103,35 @@ final class FrontendShortcodes extends GlobalHandler
 </form>
 <?php
 
-                        return ob_get_clean();
+                            return ob_get_clean();
+
+                        } elseif ($_GET['regime'] === 'newpass' &&
+                            isset($_GET['token'])) {
+
+                            ob_start();
+
+                            $action = explode('?', $_SERVER['REQUEST_URI']);
+                            $action = $action[0];
+                            
+
+?>
+<form action="<?= htmlspecialchars($action) ?>" method="post" id="regimeForm_newpass">
+    <?php wp_nonce_field('regimeForm-newpass', 'regimeForm-newpass-wpnp') ?>
+    <div id="regimeFormField_user_password_container">
+        <p><label for="regimeFormField_user_password_label">
+            <?= esc_html__('Введите новый пароль:', 'regime') ?>
+        </label></p>
+        <input type="password" name="regimeFormField_user_password" id="regimeFormField_user_password" placeholder="<?= esc_attr__('новый пароль', 'regime') ?>" required="true">
+    </div>
+    <div id="regimeForm_newpass_submit" style="margin-top: 1rem;">
+        <button type="submit"><?= esc_html__('Сохранить', 'regime') ?></button>
+    </div>
+</form>
+<?php
+
+                            return ob_get_clean();
+
+                        }
 
                     }
 
