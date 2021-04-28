@@ -20,11 +20,7 @@ final class FrontendShortcodes extends GlobalHandler
     protected function init() : self
     {
 
-        add_action('init', function() {
-
-            $this->regimeForm();
-
-        }, 100);
+        $this->regimeForm();
 
         return $this;
 
@@ -86,6 +82,28 @@ final class FrontendShortcodes extends GlobalHandler
                         
                         return ob_get_clean();
 
+                    } elseif ($form['type'] === 'authorization' &&
+                        $_GET['regime'] === 'restore') {
+
+                        ob_start();
+
+?>
+<form action="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>" method="post" id="regimeForm_restore">
+    <?php wp_nonce_field('regimeForm-restore', 'regimeForm-restore-wpnp') ?>
+    <div id="regimeFormField_user_email_container">
+        <p><label id="regimeFormField_user_email_label" for="regimeFormField_user_email">
+            <?= esc_html__('Пожалуйста, введите ваш e-mail:', 'regime') ?>
+        </label></p>
+        <input type="email" name="regimeFormField_user_email" id="regimeFormField_user_email" placeholder="<?= esc_html__('ваш e-mail', 'regime') ?>" required="true">
+    </div>
+    <div id="regimeForm_restore_submit" style="margin-top: 1rem;">
+        <button type="submit"><?= esc_html__('Отправить', 'regime') ?></button>
+    </div>
+</form>
+<?php
+
+                        return ob_get_clean();
+
                     }
 
                     $fields = json_decode($form['fields'], true);
@@ -105,7 +123,7 @@ final class FrontendShortcodes extends GlobalHandler
                     ob_start();
 
 ?>
-<form action="<?= $form['type'] === 'authorization' && $_GET['regime'] === 'restorage' ? '' : $form['action'] ?>" method="post" id="regimeForm_<?= $id ?>">
+<form action="<?= htmlspecialchars(urldecode($form['action'])) ?>" method="post" id="regimeForm_<?= $id ?>">
     <input type="hidden" name="regimeFormField_formId" value="<?= $id ?>">
 <?php
 
@@ -230,7 +248,7 @@ final class FrontendShortcodes extends GlobalHandler
                     }
 
 ?>
-    <div id="regimeForm_<?= $field_id ?>_submit" style="margin-top: 1rem;">
+    <div id="regimeForm_<?= htmlspecialchars($form['type'].'_'.$id) ?>_submit" style="margin-top: 1rem;">
         <button type="submit">
 <?php
 

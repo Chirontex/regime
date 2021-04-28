@@ -8,6 +8,7 @@ use Regime\Traits\Noticer;
 use Regime\Models\Tables\FormsTable;
 use Regime\Models\Tables\MailsTable;
 use WP_Error;
+use WP_User;
 
 /**
  * @final
@@ -192,68 +193,140 @@ final class FormsHandler extends GlobalHandler
 
                 if (empty($form)) return;
 
-                if ($_GET['regime'] === 'restorage') {
+                $userdata = [];
 
-                    //
+                foreach ($form['fields'] as $field_id => $props) {
 
-                } else {
+                    $type = explode('_', $field_id);
+                    $type = $type[0];
 
-                    $userdata = [];
+                    if ($type !== 'reset') {
 
-                    foreach ($form['fields'] as $field_id => $props) {
-
-                        $type = explode('_', $field_id);
-                        $type = $type[0];
-
-                        if ($type !== 'reset') {
-
-                            if ($type ===
-                                'checkbox') $userdata[$props['key']] = isset(
-                                    $_POST['regimeFormField_'.$field_id]
-                                ) ? 'true' : 'false';
-                            else $userdata[$props['key']] = (string)$_POST['regimeFormField_'.$field_id];
-    
-                        }
+                        if ($type ===
+                            'checkbox') $userdata[$props['key']] = isset(
+                                $_POST['regimeFormField_'.$field_id]
+                            ) ? 'true' : 'false';
+                        else $userdata[$props['key']] = (string)$_POST['regimeFormField_'.$field_id];
 
                     }
 
-                    $keys = array_keys($userdata);
+                }
 
-                    $credentials = [];
+                $keys = array_keys($userdata);
 
-                    if (array_search('user_login', $keys) !==
-                        false) $credentials['user_login'] = $userdata['user_login'];
-                    elseif (array_search('user_email', $keys) !==
-                        false) {
-                            
-                            $credentials['user_email'] = $userdata['user_email'];
+                $credentials = [];
 
-                            $credentials['user_login'] = $this->wpdb->get_var(
-                                $this->wpdb->prepare(
-                                    "SELECT t.user_login
-                                    FROM `".$this->wpdb->prefix."users` AS t
-                                    WHERE t.user_email = %s",
-                                $credentials['user_email']
-                                )
-                            );
+                if (array_search('user_login', $keys) !==
+                    false) $credentials['user_login'] = $userdata['user_login'];
+                elseif (array_search('user_email', $keys) !==
+                    false) {
                         
-                        }
+                        $credentials['user_email'] = $userdata['user_email'];
 
-                    if (array_search('user_pass', $keys) !==
-                        false) $credentials['user_password'] = $userdata['user_pass'];
-                    elseif (array_search('user_password', $keys) !==
-                        false) $credentials['user_password'] = $userdata['user_password'];
+                        $credentials['user_login'] = $this->wpdb->get_var(
+                            $this->wpdb->prepare(
+                                "SELECT t.user_login
+                                FROM `".$this->wpdb->prefix."users` AS t
+                                WHERE t.user_email = %s",
+                            $credentials['user_email']
+                            )
+                        );
+                    
+                    }
 
-                    if (array_search('remember', $keys) !==
-                        false) $credentials['remember'] = true;
+                if (array_search('user_pass', $keys) !==
+                    false) $credentials['user_password'] = $userdata['user_pass'];
+                elseif (array_search('user_password', $keys) !==
+                    false) $credentials['user_password'] = $userdata['user_password'];
 
-                    $sign = wp_signon($credentials);
+                if (array_search('remember', $keys) !==
+                    false) $credentials['remember'] = true;
 
-                    if ($sign instanceof WP_Error) $this->notice(
-                        'danger',
-                        $sign->get_error_message()
+                $sign = wp_signon($credentials);
+
+                if ($sign instanceof WP_Error) $this->notice(
+                    'danger',
+                    $sign->get_error_message()
+                );
+                else wp_set_current_user($sign->ID);
+
+            }
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Reset password form handler.
+     * @since 0.7.1
+     * 
+     * @return $this
+     */
+    protected function restore() : self
+    {
+
+        add_action('plugins_loaded', function() {
+
+            if (wp_verify_nonce(
+                $_POST['regimeForm-restore-wpnp'],
+                'regimeForm-restore'
+            ) === false) $this->notice(
+                'danger',
+                $this->nonce_fail_notice
+            );
+            else {
+
+                $email = (string)$_POST['regimeFormField_user_email'];
+
+                $user_id = (int)$this->wpdb->get_var(
+                    $this->wpdb->prepare(
+                        "SELECT t.ID
+                            FROM `".$this->wpdb->prefix."users` AS t
+                            WHERE t.user_email = %s",
+                        $email
+                    )
+                );
+
+                if (empty($user_id)) $this->notice(
+                    'danger',
+                    esc_html__(
+                        'Пользователь с данным e-mail не найден.',
+                        'regime'
+                    )
+                );
+                else {
+
+                    $mail = $this->getMailTemplate('password');
+
+                    $uri = explode('?', $_SERVER['REQUEST_URI']);
+                    $uri = $uri[0];
+
+                    $uri .= '?regime=newpass&token='.urlencode(
+                        get_password_reset_key(new WP_User($user_id))
                     );
-                    else wp_set_current_user($sign->ID);
+
+                    $mail['message'] = str_replace(
+                        '!%password_restorage_link%!',
+                        site_url($uri),
+                        $mail['message']
+                    );
+
+                    wp_mail(
+                        $email,
+                        $mail['header'],
+                        $mail['message'],
+                        ['Content-type: text/html; charset=utf-8']
+                    );
+
+                    $this->notice(
+                        'success',
+                        esc_html__(
+                            'Инструкция по восстановлению пароля отправлена.',
+                            'regime'
+                        )
+                    );
 
                 }
 
@@ -325,6 +398,10 @@ final class FormsHandler extends GlobalHandler
      * @param string $template_id
      * Template ID. Cannot be empty.
      * 
+     * @param bool $restore_password
+     * Determines whether need to generate token to
+     * password restorage or not.
+     * 
      * @return array
      * Empty if template was not found.
      */
@@ -343,8 +420,14 @@ final class FormsHandler extends GlobalHandler
             foreach (['header', 'message'] as $entity) {
 
                 $template[$entity] = str_replace(
-                    ['!%site_url%!', '!%site_name%!'],
-                    [site_url(), get_bloginfo('name')],
+                    [
+                        '!%site_url%!',
+                        '!%site_name%!',
+                    ],
+                    [
+                        site_url(),
+                        get_bloginfo('name')
+                    ],
                     $template[$entity]
                 );
 
