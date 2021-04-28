@@ -19,8 +19,12 @@ final class FrontendShortcodes extends GlobalHandler
      */
     protected function init() : self
     {
-        
-        $this->regimeForm();
+
+        add_action('init', function() {
+
+            $this->regimeForm();
+
+        }, 100);
 
         return $this;
 
@@ -76,7 +80,7 @@ final class FrontendShortcodes extends GlobalHandler
 ?>
 <p>
     <?= esc_html__('Вы авторизованы.', 'regime') ?> 
-    <a href="<?= wp_logout_url($_SERVER['REQUEST_URI']) ?>"><?= esc_html__('Выйти', 'regime') ?></a>
+    <a href="<?= wp_logout_url('/') ?>"><?= esc_html__('Выйти', 'regime') ?></a>
 </p>
 <?php
                         
@@ -101,7 +105,7 @@ final class FrontendShortcodes extends GlobalHandler
                     ob_start();
 
 ?>
-<form action="<?= $form['type'] === 'authorization' ? '' : $form['action'] ?>" method="post" id="regimeForm_<?= $id ?>">
+<form action="<?= $form['type'] === 'authorization' && $_GET['regime'] === 'restorage' ? '' : $form['action'] ?>" method="post" id="regimeForm_<?= $id ?>">
     <input type="hidden" name="regimeFormField_formId" value="<?= $id ?>">
 <?php
 
@@ -226,7 +230,7 @@ final class FrontendShortcodes extends GlobalHandler
                     }
 
 ?>
-    <div id="regimeForm_<?= $field_id ?>_submit">
+    <div id="regimeForm_<?= $field_id ?>_submit" style="margin-top: 1rem;">
         <button type="submit">
 <?php
 

@@ -45,7 +45,12 @@ final class FormsHandler extends GlobalHandler
             'regime'
         );
 
-        if (isset($_POST['regimeForm-registration-wpnp'])) $this->registration();
+        if (isset(
+            $_POST['regimeForm-registration-wpnp']
+        )) $this->registration();
+        elseif (isset(
+            $_POST['regimeForm-authorization-wpnp']
+        )) $this->authorization();
 
         return $this;
 
@@ -163,6 +168,12 @@ final class FormsHandler extends GlobalHandler
 
     }
 
+    /**
+     * Authorization handler.
+     * @since 0.7.0
+     * 
+     * @return $this
+     */
     protected function authorization() : self
     {
 
@@ -212,6 +223,21 @@ final class FormsHandler extends GlobalHandler
 
                     if (array_search('user_login', $keys) !==
                         false) $credentials['user_login'] = $userdata['user_login'];
+                    elseif (array_search('user_email', $keys) !==
+                        false) {
+                            
+                            $credentials['user_email'] = $userdata['user_email'];
+
+                            $credentials['user_login'] = $this->wpdb->get_var(
+                                $this->wpdb->prepare(
+                                    "SELECT t.user_login
+                                    FROM `".$this->wpdb->prefix."users` AS t
+                                    WHERE t.user_email = %s",
+                                $credentials['user_email']
+                                )
+                            );
+                        
+                        }
 
                     if (array_search('user_pass', $keys) !==
                         false) $credentials['user_password'] = $userdata['user_pass'];
@@ -227,9 +253,7 @@ final class FormsHandler extends GlobalHandler
                         'danger',
                         $sign->get_error_message()
                     );
-                    elseif (!empty($form['action'])) header(
-                        'Location: '.site_url($form['action'])
-                    );
+                    else wp_set_current_user($sign->ID);
 
                 }
 
