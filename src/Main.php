@@ -76,8 +76,8 @@ final class Main extends PointOfEntry
         }
 
         $this
-            ->frontendShortcodesInit()
-            ->formsHandlerInit();
+            ->formsHandlerInit()
+            ->frontendShortcodesInit();
         
         return $this;
 

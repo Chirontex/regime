@@ -71,48 +71,13 @@ final class FormsHandler extends GlobalHandler
             );
             else {
 
-                if (!isset($_POST['regimeFormField_formId'])) {
+                $form = $this->formGet();
 
-                    $this->notice(
-                        'danger',
-                        esc_html__(
-                            'Ошибка при отправке формы: целостность данных нарушена',
-                            'regime'
-                        )
-                    );
-
-                    return $this;
-
-                }
-
-                $form_id = (int)$_POST['regimeFormField_formId'];
-
-                $forms_table = new FormsTable(
-                    $this->wpdb,
-                    $this->tables_props['forms']
-                );
-
-                $form = $forms_table->getForm($form_id);
-
-                if (empty($form)) {
-
-                    $this->notice(
-                        'danger',
-                        esc_html__(
-                            'Ошибка обработки формы: форма не найдена.',
-                            'regime'
-                        )
-                    );
-
-                    return $this;
-
-                }
-
-                $fields = json_decode($form['fields'], true);
+                if (empty($form)) return;
 
                 $userdata = [];
 
-                foreach ($fields as $field_id => $props) {
+                foreach ($form['fields'] as $field_id => $props) {
 
                     $type = explode('_', $field_id);
                     $type = $type[0];
@@ -195,6 +160,137 @@ final class FormsHandler extends GlobalHandler
         });
 
         return $this;
+
+    }
+
+    protected function authorization() : self
+    {
+
+        add_action('plugins_loaded', function() {
+
+            if (wp_verify_nonce(
+                $_POST['regimeForm-authorization-wpnp'],
+                'regimeForm-authorization'
+            ) === false) $this->notice(
+                'danger',
+                $this->nonce_fail_notice
+            );
+            else {
+
+                $form = $this->formGet();
+
+                if (empty($form)) return;
+
+                if ($_GET['regime'] === 'restorage') {
+
+                    //
+
+                } else {
+
+                    $userdata = [];
+
+                    foreach ($form['fields'] as $field_id => $props) {
+
+                        $type = explode('_', $field_id);
+                        $type = $type[0];
+
+                        if ($type !== 'reset') {
+
+                            if ($type ===
+                                'checkbox') $userdata[$props['key']] = isset(
+                                    $_POST['regimeFormField_'.$field_id]
+                                ) ? 'true' : 'false';
+                            else $userdata[$props['key']] = (string)$_POST['regimeFormField_'.$field_id];
+    
+                        }
+
+                    }
+
+                    $keys = array_keys($userdata);
+
+                    $credentials = [];
+
+                    if (array_search('user_login', $keys) !==
+                        false) $credentials['user_login'] = $userdata['user_login'];
+
+                    if (array_search('user_pass', $keys) !==
+                        false) $credentials['user_password'] = $userdata['user_pass'];
+                    elseif (array_search('user_password', $keys) !==
+                        false) $credentials['user_password'] = $userdata['user_password'];
+
+                    if (array_search('remember', $keys) !==
+                        false) $credentials['remember'] = true;
+
+                    $sign = wp_signon($credentials);
+
+                    if ($sign instanceof WP_Error) $this->notice(
+                        'danger',
+                        $sign->get_error_message()
+                    );
+                    elseif (!empty($form['action'])) header(
+                        'Location: '.site_url($form['action'])
+                    );
+
+                }
+
+            }
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Get form data.
+     * @since 0.6.9
+     * 
+     * @param bool $fail_notice
+     * Determines notice outputs.
+     * 
+     * @return array
+     */
+    protected function formGet(bool $fail_notice = true) : array
+    {
+
+        if (!isset($_POST['regimeFormField_formId'])) {
+
+            if ($fail_notice) $this->notice(
+                'danger',
+                esc_html__(
+                    'Ошибка при отправке формы: целостность данных нарушена.',
+                    'regime'
+                )
+            );
+
+            return [];
+
+        }
+
+        $form_id = (int)$_POST['regimeFormField_formId'];
+
+        $forms_table = new FormsTable(
+            $this->wpdb,
+            $this->tables_props['forms']
+        );
+
+        $form = $forms_table->getForm($form_id);
+
+        if (empty($form) &&
+            $fail_notice) $this->notice(
+                'danger',
+                esc_html__(
+                    'Ошибка обработки формы: форма не найдена.',
+                    'regime'
+                )
+            );
+
+        if (isset($form['fields'])) $form['fields'] = json_decode(
+            $form['fields'],
+            true
+        );
+
+        return $form;
 
     }
 

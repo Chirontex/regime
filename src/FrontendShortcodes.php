@@ -101,7 +101,7 @@ final class FrontendShortcodes extends GlobalHandler
                     ob_start();
 
 ?>
-<form action="<?= $form['type'] === 'authorization' && $_GET['restore'] === 'true' ? '' : $form['action'] ?>" method="post" id="regimeForm_<?= $id ?>">
+<form action="<?= $form['type'] === 'authorization' ? '' : $form['action'] ?>" method="post" id="regimeForm_<?= $id ?>">
     <input type="hidden" name="regimeFormField_formId" value="<?= $id ?>">
 <?php
 
