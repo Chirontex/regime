@@ -89,7 +89,7 @@ final class FrontendShortcodes extends GlobalHandler
                             ob_start();
 
 ?>
-<form action="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>" method="post" id="regimeForm_restore">
+<form action="" method="post" id="regimeForm_restore">
     <?php wp_nonce_field('regimeForm-restore', 'regimeForm-restore-wpnp') ?>
     <div id="regimeFormField_user_email_container">
         <p><label id="regimeFormField_user_email_label" for="regimeFormField_user_email">
@@ -106,6 +106,7 @@ final class FrontendShortcodes extends GlobalHandler
                             return ob_get_clean();
 
                         } elseif ($_GET['regime'] === 'newpass' &&
+                            isset($_GET['user']) &&
                             isset($_GET['token'])) {
 
                             ob_start();
@@ -115,8 +116,11 @@ final class FrontendShortcodes extends GlobalHandler
                             
 
 ?>
-<form action="<?= htmlspecialchars($action) ?>" method="post" id="regimeForm_newpass">
+<form action="" method="post" id="regimeForm_newpass">
     <?php wp_nonce_field('regimeForm-newpass', 'regimeForm-newpass-wpnp') ?>
+    <input type="hidden" name="regimeFormField_action" value="<?= htmlspecialchars($action) ?>" required="true">
+    <input type="hidden" name="regimeFormField_user" value="<?= htmlspecialchars(urldecode($_GET['user'])) ?>" required="true">
+    <input type="hidden" name="regimeFormField_user_token" value="<?= htmlspecialchars(urldecode($_GET['token'])) ?>" required="true">
     <div id="regimeFormField_user_password_container">
         <p><label for="regimeFormField_user_password_label">
             <?= esc_html__('Введите новый пароль:', 'regime') ?>
@@ -152,7 +156,7 @@ final class FrontendShortcodes extends GlobalHandler
                     ob_start();
 
 ?>
-<form action="<?= htmlspecialchars(urldecode($form['action'])) ?>" method="post" id="regimeForm_<?= $id ?>">
+<form action="" method="post" id="regimeForm_<?= $id ?>">
     <input type="hidden" name="regimeFormField_formId" value="<?= $id ?>">
 <?php
 

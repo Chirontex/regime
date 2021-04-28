@@ -36,6 +36,14 @@ final class FormsHandler extends GlobalHandler
     protected $nonce_fail_notice;
 
     /**
+     * @var array $action_container
+     * Contains action parameters: uri,
+     * timeout in ms and content hiding flag.
+     * @since 0.7.2
+     */
+    protected $action_container;
+
+    /**
      * @since 0.6.4
      */
     protected function init() : self
@@ -52,6 +60,12 @@ final class FormsHandler extends GlobalHandler
         elseif (isset(
             $_POST['regimeForm-authorization-wpnp']
         )) $this->authorization();
+        elseif (isset(
+            $_POST['regimeForm-restore-wpnp']
+        )) $this->restore();
+        elseif (isset(
+            $_POST['regimeForm-newpass-wpnp']
+        )) $this->newpass();
 
         return $this;
 
@@ -157,6 +171,8 @@ final class FormsHandler extends GlobalHandler
                             ['Content-type: text/html; charset=utf-8']
                         );
 
+                        if (!empty($form['action'])) $this->setAction($form['action']);
+
                     }
 
                 }
@@ -246,9 +262,15 @@ final class FormsHandler extends GlobalHandler
 
                 if ($sign instanceof WP_Error) $this->notice(
                     'danger',
-                    $sign->get_error_message()
+                    esc_html__('Данные для входа введены неверно.', 'regime')
                 );
-                else wp_set_current_user($sign->ID);
+                else {
+                    
+                    wp_set_current_user($sign->ID);
+
+                    if (!empty($form['action'])) $this->setAction($form['action']);
+                
+                }
 
             }
 
@@ -303,8 +325,11 @@ final class FormsHandler extends GlobalHandler
                     $uri = explode('?', $_SERVER['REQUEST_URI']);
                     $uri = $uri[0];
 
-                    $uri .= '?regime=newpass&token='.urlencode(
-                        get_password_reset_key(new WP_User($user_id))
+                    $user = new WP_User($user_id);
+
+                    $uri .= '?regime=newpass&user='.urlencode($user->get('user_login')).
+                        '&token='.urlencode(
+                            get_password_reset_key($user)
                     );
 
                     $mail['message'] = str_replace(
@@ -327,6 +352,92 @@ final class FormsHandler extends GlobalHandler
                             'regime'
                         )
                     );
+
+                }
+
+            }
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * New password form handler.
+     * @since 0.7.2
+     * 
+     * @return $this
+     */
+    protected function newpass() : self
+    {
+
+        add_action('plugins_loaded', function() {
+
+            if (wp_verify_nonce(
+                $_POST['regimeForm-newpass-wpnp'],
+                'regimeForm-newpass'
+            ) === false) $this->notice(
+                'danger',
+                $this->nonce_fail_notice
+            );
+            else {
+
+                $login = (string)$_POST['regimeFormField_user'];
+                $token = (string)$_POST['regimeFormField_user_token'];
+
+                $user = check_password_reset_key($token, $login);
+
+                if ($user instanceof WP_Error) $this->notice(
+                    'danger',
+                    esc_html__('Токен невалиден.', 'regime')
+                );
+                else {
+
+                    $password = (string)$_POST['regimeFormField_user_password'];
+
+                    $password = str_replace(
+                        [" ", "\n", "\v", "\t", "\r", "\0"],
+                        '',
+                        $password
+                    );
+
+                    if (empty($password)) {
+
+                        $this->notice(
+                            'danger',
+                            esc_html__('Пароль не может быть пустым.', 'regime')
+                        );
+
+                        return;
+
+                    }
+
+                    if ($this->wpdb->update(
+                        $this->wpdb->prefix.'users',
+                        [
+                            'user_pass' => wp_hash_password($password),
+                            'user_activation_key' => ''
+                        ],
+                        ['ID' => $user->ID],
+                        ['%s', '%s'],
+                        ['%d']
+                    ) === false) $this->notice(
+                        'danger',
+                        esc_html__('Не удалось обновить пароль. Попробуйте ещё раз.', 'regime')
+                    );
+                    else {
+                        
+                        $this->notice(
+                            'success',
+                            esc_html__('Пароль успешно обновлён! Через 2 секудны вы будете перенаправлены на', 'regime').' '.
+                            '<a href="'.site_url($_POST['regimeFormField_action']).'">'.
+                            esc_html__('страницу авторизации.', 'regime').'</a>'
+                        );
+
+                        $this->setAction((string)$_POST['regimeFormField_action'], 2000, false);
+                
+                    }
 
                 }
 
@@ -467,6 +578,58 @@ final class FormsHandler extends GlobalHandler
                 $this->notice_container['type'],
                 $this->notice_container['text']
             ).$content;
+
+        }, 100);
+
+        return $this;
+
+    }
+
+    /**
+     * Set redirect action.
+     * @since 0.7.2
+     * 
+     * @param string $uri
+     * Target URI.
+     * 
+     * @return $this
+     */
+    protected function setAction(string $uri, int $timeout = 0, bool $content_hide = true) : self
+    {
+
+        if ($timeout < 0) $timeout = 0;
+
+        $this->action_timeout = $timeout;
+
+        $this->action_uri = $uri;
+
+        $this->action_container = [
+            'uri' => $uri,
+            'timeout' => $timeout,
+            'hide' => $content_hide
+        ];
+
+        add_filter('the_content', function($content) {
+
+            ob_start();
+
+?>
+<script>
+setTimeout(
+    function() 
+    {
+        window.location.replace('<?= site_url($this->action_container['uri']) ?>')
+    },
+    <?= $this->action_container['timeout'] ?>
+);
+</script>
+<?php
+
+            $output = ob_get_clean();
+
+            if (!$this->action_container['hide']) $output .= $content;
+
+            return $output;
 
         }, 100);
 
