@@ -44,6 +44,13 @@ final class Main extends PointOfEntry
     protected $mails_table_props;
 
     /**
+     * @var TableProps $menus_table_props
+     * Menus setting table properties container.
+     * @since 0.7.8
+     */
+    protected $menus_table_props;
+
+    /**
      * @since 0.0.3
      */
     protected function init() : self
@@ -64,6 +71,12 @@ final class Main extends PointOfEntry
             ->setField('template_id', 'CHAR(50) NOT NULL')
             ->setField('header', 'VARCHAR(255)')
             ->setField('message', 'LONGTEXT');
+
+        $this->menus_table_props = new TableProps('regime_menus');
+
+        $this->menus_table_props
+            ->setField('role', 'CHAR(50) NOT NULL')
+            ->setField('menu_id', 'BIGINT(20) UNSIGNED NOT NULL');
 
         if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false) {
 

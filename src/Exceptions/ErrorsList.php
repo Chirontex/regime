@@ -23,6 +23,10 @@ class ErrorsList
         '-2' => [
             'message' => '%1$s cannot be less than 1.',
             'code' => -2
+        ],
+        '-3' => [
+            'message' => '%1$s cannot be less than %2$d.',
+            'code' => -2
         ]
     ];
 
@@ -104,6 +108,10 @@ class ErrorsList
         '-35' => [
             'message' => 'Data selecting failure.',
             'code ' => -35
+        ],
+        '-36' => [
+            'message' => 'Entry not found.',
+            'code' => -36
         ]
     ];
     
