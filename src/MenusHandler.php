@@ -43,7 +43,7 @@ final class MenusHandler extends GlobalHandler
 
             $user = get_current_user_id();
 
-            if ($user !== 0 && $args['theme_location'] === 'primary') {
+            if ($user !== 0) {
 
                 $menus_table = new MenusTable(
                     $this->wpdb,
