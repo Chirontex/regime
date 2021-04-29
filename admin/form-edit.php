@@ -5,7 +5,7 @@
 if (!defined('ABSPATH')) die;
 
 ?>
-<div class="container-fluid">
+<div class="container-fluid mt-3">
     <h1 class="h3 text-center mb-5">
 <?php
 

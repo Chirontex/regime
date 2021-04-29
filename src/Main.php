@@ -91,6 +91,7 @@ final class Main extends PointOfEntry
 
         $this
             ->formsHandlerInit()
+            ->menusHandlerInit()
             ->frontendShortcodesInit();
         
         return $this;
@@ -282,6 +283,25 @@ final class Main extends PointOfEntry
                 'forms' => $this->forms_table_props,
                 'mails' => $this->mails_table_props
             ]
+        );
+
+        return $this;
+
+    }
+
+    /**
+     * Initialize menus handler object.
+     * @since 0.8.1
+     * 
+     * @return $this
+     */
+    protected function menusHandlerInit() : self
+    {
+
+        new MenusHandler(
+            $this->path,
+            $this->url,
+            ['menus' => $this->menus_table_props]
         );
 
         return $this;
