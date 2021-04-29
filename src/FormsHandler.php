@@ -66,6 +66,9 @@ final class FormsHandler extends GlobalHandler
         elseif (isset(
             $_POST['regimeForm-newpass-wpnp']
         )) $this->newpass();
+        elseif (isset(
+            $_POST['regimeForm-profile-wpnp']
+        )) $this->profile();
 
         return $this;
 
@@ -452,7 +455,7 @@ final class FormsHandler extends GlobalHandler
                         
                         $this->notice(
                             'success',
-                            esc_html__('Пароль успешно обновлён! Через 2 секудны вы будете перенаправлены на', 'regime').' '.
+                            esc_html__('Пароль успешно обновлён! Сейчас вы будете перенаправлены на', 'regime').' '.
                             '<a href="'.site_url($_POST['regimeFormField_action']).'">'.
                             esc_html__('страницу авторизации.', 'regime').'</a>'
                         );
@@ -462,6 +465,142 @@ final class FormsHandler extends GlobalHandler
                     }
 
                 }
+
+            }
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Profile form handler.
+     * @since 0.7.6
+     * 
+     * @return $this
+     */
+    protected function profile() : self
+    {
+
+        add_action('plugins_loaded', function() {
+
+            if (wp_verify_nonce(
+                $_POST['regimeForm-profile-wpnp'],
+                'regimeForm-profile'
+            ) === false) $this->notice(
+                'danger',
+                $this->nonce_fail_notice
+            );
+            else {
+
+                $user_id = get_current_user_id();
+
+                if ($user_id === 0) return;
+
+                $form = $this->formGet();
+
+                if (empty($form)) return;
+
+                $userdata = [];
+                $meta = [];
+
+                foreach ($form['fields'] as $field_id => $props) {
+
+                    if ($props['key'] === 'user_login' ||
+                        $props['key'] === 'user_activation_key' ||
+                        $props['key'] === 'user_registered' ||
+                        $props['key'] === 'user_status') continue;
+
+                    if ($props['key'] === 'user_pass' ||
+                        $props['key'] === 'user_nicename' ||
+                        $props['key'] === 'user_email' ||
+                        $props['key'] === 'user_url' ||
+                        $props['key'] ===
+                            'display_name') {
+
+                        $value = (string)$_POST['regimeFormField_'.$field_id];
+                                
+                        if (!empty($value)) $userdata[$props['key']] = $value;
+                    
+                    } else {
+
+                        $type = explode('_', $field_id);
+                        $type = $type[0];
+
+                        if ($type !== 'reset') {
+
+                            if ($type ===
+                                'checkbox') $meta[$props['key']] = isset(
+                                    $_POST['regimeFormField_'.$field_id]
+                                ) ? 'true' : 'false';
+                            else {
+
+                                $value = (string)$_POST['regimeFormField_'.$field_id];
+
+                                if ($type === 'datalist' &&
+                                    $props['strict'] &&
+                                    array_search($value, $props['options']) ===
+                                        false) {
+
+                                    $this->notice(
+                                        'danger',
+                                        esc_html__('Поле', 'regime').
+                                            ' "'.$props['label'].'" '.
+                                            esc_html__('заполнено некорректно.')
+                                    );
+
+                                    return;
+
+                                }
+                                
+                                $meta[$props['key']] = $value;
+                            
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                if (!empty($userdata)) {
+
+                    if ($this->wpdb->update(
+                        $this->wpdb->prefix.'users',
+                        $userdata,
+                        ['ID' => $user_id]
+                    ) === false) {
+
+                        $this->notice(
+                            'danger',
+                            esc_html__('Не удалось обновить профиль. Попробуйте ещё раз позже.', 'regime')
+                        );
+
+                        return;
+
+                    }
+
+                }
+
+                if (!empty($meta)) {
+
+                    foreach ($meta as $key => $value) {
+
+                        update_user_meta(
+                            $user_id,
+                            $key,
+                            $value
+                        );
+
+                    }
+
+                }
+
+                $this->notice(
+                    'success',
+                    esc_html__('Изменения сохранены!', 'regime')
+                );
 
             }
 
