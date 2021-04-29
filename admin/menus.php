@@ -20,10 +20,10 @@ if (!defined('ABSPATH')) die;
                     <option value="0"><?= esc_html__('По умолчанию', 'regime') ?></option>
 <?php
 
-foreach (apply_filters('regime-menus', []) as $menu) {
+foreach (apply_filters('regime-menus-user-menu', []) as $menu) {
 
 ?>
-                    <option value="<?= $menu['term_id'] ?>"><?= htmlspecialchars($menu['name']) ?></option>
+                    <option value="<?= $menu['term_id'] ?>"<?= isset($menu['selected'])? 'selected="true"' : '' ?>><?= htmlspecialchars($menu['name']) ?></option>
 <?php
 
 }
