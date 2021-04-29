@@ -48,9 +48,7 @@ document.regimeFormEdit = {
                 field.required = true;
             }
 
-            if (type != 'checkbox' &&
-            type != 'radio' &&
-            type != 'reset') field.value = '';
+            if (type != 'reset') field.value = '';
             
             if (type == 'checkbox' ||
             type == 'radio') field.checked = false;
@@ -188,9 +186,7 @@ document.regimeFormEdit = {
                 methods.modalInputRender(fieldId, 'label');
                 methods.modalInputRender(fieldId, 'key');
                 methods.modalInputRender(fieldId, 'required');
-
-                if (type != 'checkbox' &&
-                    type != 'radio') methods.modalInputRender(fieldId, 'value');
+                methods.modalInputRender(fieldId, 'value');
             }
 
             if (type == 'select' ||

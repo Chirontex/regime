@@ -117,7 +117,7 @@ final class Forms extends AdminPage
                 'regime-form-edit',
                 $this->url.'js/form-edit.js',
                 [],
-                '0.7.3',
+                '0.7.4',
             );
 
         });

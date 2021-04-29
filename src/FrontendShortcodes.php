@@ -67,7 +67,7 @@ final class FrontendShortcodes extends GlobalHandler
 
                             return ob_get_clean();
 
-                        }
+                        } else $user = wp_get_current_user();
 
                     } elseif (get_current_user_id() !== 0) {
 
@@ -177,7 +177,7 @@ final class FrontendShortcodes extends GlobalHandler
                             $type !== 'radio') {
 
 ?>
-        <p><label for="regimeFormField_<?= $field_id ?>" id="regimeFormField_<?= $field_id ?>_label"><?= htmlspecialchars($fields[$field_id]['label']) ?></label></p>
+        <p><label for="regimeFormField_<?= $field_id ?>" id="regimeFormField_<?= $field_id ?>_label"><?= $fields[$field_id]['label'] ?></label></p>
 <?php
 
                         }
@@ -210,20 +210,54 @@ final class FrontendShortcodes extends GlobalHandler
                             $type !== 'textarea' &&
                             $type !== 'reset' &&
                             $type !== 'checkbox' &&
-                            $type !== 'radio' &&
-                            !empty($fields[$field_id]['value'])) $field .= ' value="'.
-                                $fields[$field_id]['value'].'"';
+                            $type !== 'radio') {
+                                
+                            if ($form['type'] ===
+                                'profile' &&
+                                $type !== 'checkbox' &&
+                                $type !== 'radio' &&
+                                $fields[$field_id]['key'] !==
+                                'user_pass') $field .= ' value="'.$user->get(
+                                    $fields[$field_id]['key']
+                            ).'"';
+                            elseif (!empty(
+                                $fields[$field_id]['value']
+                            )) $field .= ' value="'.$fields[$field_id]['value'].'"';
+                        
+                        }
 
-                        if ($type === 'checkbox' ||
-                            $type === 'radio') $field .= ' value="'.$field_id.'"';
+                        if ($form['type'] === 'profile' &&
+                            ($type === 'checkbox' ||
+                            $type === 'radio')) {
+                            
+                            if ($user->get($fields[$field_id]['key']) ===
+                            $fields[$field_id]['value']) $field .= ' checked="true"';
+                            
+                        } elseif ($fields[$field_id]['checked'] === true) $field .= ' checked="true"';
 
-                        if ($fields[$field_id]['checked'] === true) $field .= ' checked="true"';
+                        if ($fields[$field_id]['bound'] ||
+                            $fields[$field_id]['required']) {
+                                
+                            if ($fields[$field_id]['key'] ===
+                                'user_pass') {
 
-                        if ($fields[$field_id]['bound'] === true ||
-                            $fields[$field_id]['required'] === true) $field .= ' required="true">'.PHP_EOL;
+                                if ($form['type'] !==
+                                    'profile') $field .= ' required="true">'.PHP_EOL;
+
+                            } else $field .= ' required="true">'.PHP_EOL;
+                        
+                        }
 
                         if ($type ===
-                            'textarea') $field .= htmlspecialchars($fields[$field_id]['value']).PHP_EOL.'</textarea>'.PHP_EOL;
+                            'textarea') {
+
+                            if ($form['type'] ===
+                                'profile') $field .= htmlspecialchars($user->get($fields[$field_id]['key'])).PHP_EOL;
+                            elseif (!empty($fields[$field_id]['value'])) $field .= htmlspecialchars($fields[$field_id]['value']).PHP_EOL;
+                                
+                            $field .= '</textarea>'.PHP_EOL;
+                            
+                        }
                         elseif ($type ===
                             'reset') $field .= htmlspecialchars($fields[$field_id]['placeholder']).PHP_EOL.'</button>'.PHP_EOL;
 
@@ -245,9 +279,13 @@ final class FrontendShortcodes extends GlobalHandler
 
                             foreach ($fields[$field_id]['options'] as $value) {
 
+                                if ($form['type'] ===
+                                    'profile') $selected = $user->get($fields[$field_id]['key']);
+                                else $selected = $fields[$field_id]['value'];
+                                
+
                                 $field .= '<option value="'.$value.'"'.
-                                    ($value ===
-                                        $fields[$field_id]['value'] &&
+                                    ($value === $selected &&
                                         $type === 'select' ?
                                             ' selected="true"': ''
                                     ).'>'.($type === 'select' ?
@@ -269,7 +307,7 @@ final class FrontendShortcodes extends GlobalHandler
                             ($type === 'checkbox' || $type === 'radio')) {
 
 ?>
-        <label for="regimeFormField_<?= $field_id ?>" id="regimeFormField_<?= $field_id ?>_label"><?= htmlspecialchars($fields[$field_id]['label']) ?></label>
+        <label for="regimeFormField_<?= $field_id ?>" id="regimeFormField_<?= $field_id ?>_label"><?= $fields[$field_id]['label'] ?></label>
 <?php
 
                         }
@@ -304,6 +342,21 @@ final class FrontendShortcodes extends GlobalHandler
 ?>
         </button>
     </div>
+<?php
+
+        if ($form['type'] === 'profile') {
+
+?>
+    <div id="regimeForm_profile_<?= $id ?>_logout" style="margin-top: 1rem;">
+        <button onclick="window.location.replace('<?= wp_logout_url('/') ?>');">
+            <?= esc_html__('Выход', 'regime') ?>
+        </button>
+    </div>
+<?php
+
+        }
+
+?>
 </form>
 <?php
 
