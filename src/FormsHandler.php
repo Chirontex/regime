@@ -113,15 +113,15 @@ final class FormsHandler extends GlobalHandler
                             $value = (string)$_POST['regimeFormField_'.$field_id];
 
                             if ($type === 'datalist' &&
+                                $props['strict'] &&
                                 array_search($value, $props['options']) ===
                                     false) {
 
                                 $this->notice(
                                     'danger',
-                                    sprintf(
-                                        esc_html__('Поле', 'regime').
-                                            ' "%1$s"'.esc_html__(' заполнено некорректно.'),
-                                        $props['label'])
+                                    esc_html__('Поле', 'regime').
+                                        ' "'.$props['label'].'" '.
+                                        esc_html__('заполнено некорректно.')
                                 );
 
                                 return;

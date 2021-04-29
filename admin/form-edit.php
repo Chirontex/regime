@@ -72,6 +72,7 @@ if (isset($_GET['fid']) &&
                     <button class="btn btn-sm btn-outline-primary mb-1" onclick="document.regimeFormEdit.methods.fieldAdd('password', 'primary', '<?= esc_html__('Ввод пароля', 'regime') ?>');"><?= esc_html__('Пароль', 'regime') ?></button>
                     <button class="btn btn-sm btn-outline-primary mb-1" onclick="document.regimeFormEdit.methods.fieldAdd('tel', 'primary', '<?= esc_html__('Ввод телефона', 'regime') ?>');"><?= esc_html__('Телефон', 'regime') ?></button>
                     <button class="btn btn-sm btn-outline-primary mb-1" onclick="document.regimeFormEdit.methods.fieldAdd('url', 'primary', '<?= esc_html__('Ввод URL', 'regime') ?>');"><?= esc_html__('URL', 'regime') ?></button>
+                    <button class="btn btn-sm btn-outline-primary mb-1" onclick="document.regimeFormEdit.methods.fieldAdd('date', 'primary', '<?= esc_html__('Ввод даты', 'regime') ?>');"><?= esc_html__('Дата', 'regime') ?></button>
                 </div>
             </div>
             <div class="mb-3">
