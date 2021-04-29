@@ -289,8 +289,8 @@ final class FrontendShortcodes extends GlobalHandler
                                         $type === 'select' ?
                                             ' selected="true"': ''
                                     ).'>'.($type === 'select' ?
-                                        htmlspecialchars($value).'</option>' :
-                                        '').PHP_EOL;
+                                            $value.'</option>' :
+                                            '').PHP_EOL;
 
                             }
 
@@ -353,6 +353,20 @@ final class FrontendShortcodes extends GlobalHandler
         </button>
     </div>
 <?php
+
+        } elseif ($form['type'] === 'authorization' &&
+            !isset($_GET['regime'])) {
+
+        $link = $_SERVER['REQUEST_URI'];
+
+        $link .= strpos($link, '?') ? '&' : '?';
+        $link .= 'regime=restore';
+
+?>
+<div id="regimeForm_authorization_<?= $id ?>_forgot" style="margin-top: 1rem;">
+    <p><a href="<?= $link ?>"><?= esc_html__('Забыли пароль?', 'regime') ?></a></p>
+</div>
+<?php            
 
         }
 

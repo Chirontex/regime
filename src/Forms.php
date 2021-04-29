@@ -117,7 +117,7 @@ final class Forms extends AdminPage
                 'regime-form-edit',
                 $this->url.'js/form-edit.js',
                 [],
-                '0.7.4',
+                '0.8.1',
             );
 
         });
@@ -195,7 +195,13 @@ final class Forms extends AdminPage
 
                         }
 
-                        $fields = json_encode($fields);
+                        $fields = json_encode(
+                            $fields,
+                            JSON_UNESCAPED_UNICODE |
+                            JSON_UNESCAPED_SLASHES |
+                            JSON_HEX_QUOT |
+                            JSON_HEX_APOS
+                        );
 
                         if (isset($_POST['regimeFormId'])) {
 

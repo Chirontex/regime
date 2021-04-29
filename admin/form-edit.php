@@ -252,5 +252,6 @@ document.regimeFormEdit.fields.password_1.label = '<?= esc_html__('Пароль:
 }
 
 ?>
+document.regimeFormEdit.methods.fieldsCountRestore();
 document.regimeFormEdit.methods.formRenderReload();
 </script>

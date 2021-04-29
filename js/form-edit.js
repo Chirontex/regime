@@ -463,6 +463,18 @@ document.regimeFormEdit = {
                     'danger'
                 );
             }
+        },
+        fieldsCountRestore: () => {
+            const fields = document.regimeFormEdit.fields;
+
+            let i = 0;
+
+            for (field in fields)
+            {
+                i += 1;
+            }
+
+            document.regimeFormEdit.fieldsCount = i;
         }
     }
 };
