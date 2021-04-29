@@ -348,7 +348,7 @@ final class FrontendShortcodes extends GlobalHandler
 
 ?>
     <div id="regimeForm_profile_<?= $id ?>_logout" style="margin-top: 1rem;">
-        <button onclick="window.location.replace('<?= wp_logout_url('/') ?>');">
+        <button type="button" onclick="window.location.replace('<?= wp_logout_url('/') ?>');">
             <?= esc_html__('Выход', 'regime') ?>
         </button>
     </div>
