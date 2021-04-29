@@ -108,7 +108,29 @@ final class FormsHandler extends GlobalHandler
                             'checkbox') $userdata[$props['key']] = isset(
                                 $_POST['regimeFormField_'.$field_id]
                             ) ? 'true' : 'false';
-                        else $userdata[$props['key']] = (string)$_POST['regimeFormField_'.$field_id];
+                        else {
+
+                            $value = (string)$_POST['regimeFormField_'.$field_id];
+
+                            if ($type === 'datalist' &&
+                                array_search($value, $props['options']) ===
+                                    false) {
+
+                                $this->notice(
+                                    'danger',
+                                    sprintf(
+                                        esc_html__('Поле', 'regime').
+                                            ' "%1$s"'.esc_html__(' заполнено некорректно.'),
+                                        $props['label'])
+                                );
+
+                                return;
+
+                            }
+                            
+                            $userdata[$props['key']] = $value;
+                        
+                        }
 
                     }
 
