@@ -84,6 +84,7 @@ final class Main extends PointOfEntry
                 ->menuAdd()
                 ->formsInit()
                 ->mailsInit()
+                ->menusInit()
                 ->submenuRemove();
 
         }
@@ -193,6 +194,34 @@ final class Main extends PointOfEntry
             $this->url,
             $container,
             $this->mails_table_props
+        );
+
+        return $this;
+
+    }
+
+    /**
+     * Initialize menus admin page.
+     * @since 0.7.9
+     * 
+     * @return $this
+     */
+    protected function menusInit() : self
+    {
+
+        $container = new AdminMenuPage(
+            $this->admin_pages_dir.'menus.php',
+            file_get_contents($this->path.$this->icons_path.'menu.svg').
+            ' '.esc_html__('Настройки меню', 'regime'),
+            'Настройки меню',
+            'regime-menus'
+        );
+
+        new Menus(
+            $this->path,
+            $this->url,
+            $container,
+            $this->menus_table_props
         );
 
         return $this;
