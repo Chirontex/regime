@@ -602,6 +602,8 @@ final class FormsHandler extends GlobalHandler
                     esc_html__('Изменения сохранены!', 'regime')
                 );
 
+                if (!empty($form['action'])) $this->setAction($form['action']);
+
             }
 
         });
