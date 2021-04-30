@@ -113,7 +113,10 @@ final class FormsHandler extends GlobalHandler
                             ) ? 'true' : 'false';
                         else {
 
-                            $value = (string)$_POST['regimeFormField_'.$field_id];
+                            if ($type ===
+                                'radio') $value =
+                                    (string)$_POST['regimeFormField_'.$type.'_'.$props['key']];
+                            else $value = (string)$_POST['regimeFormField_'.$field_id];
 
                             if ($type === 'datalist' &&
                                 $props['strict'] &&
@@ -247,6 +250,9 @@ final class FormsHandler extends GlobalHandler
                             'checkbox') $userdata[$props['key']] = isset(
                                 $_POST['regimeFormField_'.$field_id]
                             ) ? 'true' : 'false';
+                        elseif ($type ===
+                            'radio') $userdata[$props['key']] =
+                                (string)$_POST['regimeFormField_'.$type.'_'.$props['key']];
                         else $userdata[$props['key']] = (string)$_POST['regimeFormField_'.$field_id];
 
                     }
@@ -536,7 +542,9 @@ final class FormsHandler extends GlobalHandler
                                 ) ? 'true' : 'false';
                             else {
 
-                                $value = (string)$_POST['regimeFormField_'.$field_id];
+                                if ($type === 'radio') $value =
+                                    (string)$_POST['regimeFormField_'.$type.'_'.$props['key']];
+                                else $value = (string)$_POST['regimeFormField_'.$field_id];
 
                                 if ($type === 'datalist' &&
                                     $props['strict'] &&

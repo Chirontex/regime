@@ -194,8 +194,11 @@ final class FrontendShortcodes extends GlobalHandler
                         if ($type !==
                             'textarea') $field .= ' type="'.$type.'"';
 
-                        $field .= ' id="regimeFormField_'.$field_id.
-                            '" name="regimeFormField_'.$field_id.'"';
+                        $field .= ' id="regimeFormField_'.$field_id.'"';
+
+                        if ($type === 'radio') $field .= ' name="regimeFormField_'.
+                            $type.'_'.$fields[$field_id]['key'].'"';
+                        else $field .= ' name="regimeFormField_'.$field_id.'"';
 
                         $field .= ' class="'.$fields[$field_id]['css'].'"';
 
@@ -204,25 +207,23 @@ final class FrontendShortcodes extends GlobalHandler
 
                         if ($tag !== 'button' &&
                             $tag !== 'select') $field .= ' placeholder="'.
-                            $fields[$field_id]['placeholder'].'"';
+                            htmlspecialchars($fields[$field_id]['placeholder']).'"';
 
                         if ($type !== 'select' &&
                             $type !== 'textarea' &&
-                            $type !== 'reset' &&
-                            $type !== 'checkbox' &&
-                            $type !== 'radio') {
+                            $type !== 'reset') {
                                 
                             if ($form['type'] ===
                                 'profile' &&
                                 $type !== 'checkbox' &&
                                 $type !== 'radio' &&
                                 $fields[$field_id]['key'] !==
-                                'user_pass') $field .= ' value="'.$user->get(
+                                'user_pass') $field .= ' value="'.htmlspecialchars($user->get(
                                     $fields[$field_id]['key']
-                            ).'"';
+                            )).'"';
                             elseif (!empty(
                                 $fields[$field_id]['value']
-                            )) $field .= ' value="'.$fields[$field_id]['value'].'"';
+                            )) $field .= ' value="'.htmlspecialchars($fields[$field_id]['value']).'"';
                         
                         }
 
