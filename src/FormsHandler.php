@@ -7,6 +7,9 @@ namespace Regime;
 use Regime\Traits\Noticer;
 use Regime\Models\Tables\FormsTable;
 use Regime\Models\Tables\MailsTable;
+use Regime\Models\Tables\SettingsTable;
+use Regime\Exceptions\FormsHandlerException;
+use Regime\Exceptions\ErrorsList;
 use WP_Error;
 use WP_User;
 
@@ -148,7 +151,7 @@ final class FormsHandler extends GlobalHandler
                     isset($userdata['user_email'])) {
 
                    $userdata['user_login'] = explode('@', $userdata['user_email']);
-                   $userdata['user_login'] = $userdata['user_login'][0];
+                   $userdata['user_login'] = $userdata['user_login'][0].time();
 
                 }
 
@@ -188,21 +191,11 @@ final class FormsHandler extends GlobalHandler
                         esc_html__('Регистрация завершена!', 'regime')
                     );
                 
-                    if (isset($userdata['user_email'])) {
-
-                        $template = $this->getMailTemplate('registration');
-
-                        wp_mail(
-                            $userdata['user_email'],
-                            $template['header'],
-                            $template['message'],
-                            ['Content-type: text/html; charset=utf-8']
-                        );
-
-                        if (!empty($form['action'])) $this->setAction($form['action']);
-
-                    }
-
+                    if (isset($userdata['user_email'])) $this
+                        ->sendMail($userdata['user_email'], 'registration');
+                    
+                    if (!empty($form['action'])) $this
+                        ->setAction($form['action']);
                 }
 
             }
@@ -351,30 +344,7 @@ final class FormsHandler extends GlobalHandler
                 );
                 else {
 
-                    $mail = $this->getMailTemplate('password');
-
-                    $uri = explode('?', $_SERVER['REQUEST_URI']);
-                    $uri = $uri[0];
-
-                    $user = new WP_User($user_id);
-
-                    $uri .= '?regime=newpass&user='.urlencode($user->get('user_login')).
-                        '&token='.urlencode(
-                            get_password_reset_key($user)
-                    );
-
-                    $mail['message'] = str_replace(
-                        '!%password_restorage_link%!',
-                        site_url($uri),
-                        $mail['message']
-                    );
-
-                    wp_mail(
-                        $email,
-                        $mail['header'],
-                        $mail['message'],
-                        ['Content-type: text/html; charset=utf-8']
-                    );
+                    $this->sendMail($email, 'password', new WP_User($user_id));
 
                     $this->notice(
                         'success',
@@ -723,6 +693,110 @@ final class FormsHandler extends GlobalHandler
         }
 
         return $template;
+
+    }
+
+    /**
+     * Send a mail by template.
+     * @since 0.8.7
+     * 
+     * @param string $to
+     * Recipient email.
+     * 
+     * @param string $template_name
+     * Mail template name.
+     * 
+     * @param WP_User|null $user
+     * Recipient WP_User instance.
+     * Optional as usual. Must be defined if $template_name is 'password'.
+     * 
+     * @return $this
+     * 
+     * @throws Regime\Exceptions\FormsHandlerException
+     */
+    protected function sendMail(string $to, string $template_name, $user = null) : self
+    {
+
+        if (empty($to)) throw new FormsHandlerException(
+            sprintf(ErrorsList::COMMON['-1']['message'], 'Recipient e-mail'),
+            ErrorsList::COMMON['-1']['code']
+        );
+
+        if (filter_var($to, FILTER_VALIDATE_EMAIL) ===
+            false) throw new FormsHandlerException(
+                sprintf(
+                    ErrorsList::COMMON['-4']['message'],
+                    'Argument "to"',
+                    'e-mail'
+                ),
+                ErrorsList::COMMON['-4']['code']
+        );
+
+        if (empty($template_name)) throw new FormsHandlerException(
+            sprintf(ErrorsList::COMMON['-1']['message'], 'Template name'),
+            ErrorsList::COMMON['-1']['code']
+        );
+
+        if (!($user instanceof WP_User) &&
+            $user !== null) throw new FormsHandlerException(
+                sprintf(
+                    ErrorsList::COMMON['-4']['message'],
+                    'Argument "user"',
+                    'WP_User instance'
+                ),
+                ErrorsList::COMMON['-4']['code']
+            );
+
+        $template = $this->getMailTemplate($template_name);
+
+        if (empty($template)) throw new FormsHandlerException(
+            sprintf(ErrorsList::COMMON['-5']['message'], 'Template'),
+            ErrorsList::COMMON['-5']['code']
+        );
+
+        if ($template_name === 'password' &&
+            $user instanceof WP_User) {
+
+            $uri = explode('?', $_SERVER['REQUEST_URI']);
+            $uri = $uri[0];
+
+            $uri .= '?regime=newpass&user='.urlencode($user->get('user_login')).
+                '&token='.urlencode(
+                    get_password_reset_key($user)
+            );
+
+            $template['message'] = str_replace(
+                '!%password_restorage_link%!',
+                site_url($uri),
+                $template['message']
+            );
+
+        }
+
+        $settings_table = new SettingsTable(
+            $this->wpdb,
+            $this->tables_props['settings']
+        );
+
+        $sender_email = $settings_table->get('sender_email');
+        $sender_email = empty($sender_email) ?
+            'wordpress@'.$_SERVER['HTTP_HOST'] : $sender_email;
+
+        $sender_name = $settings_table->get('sender_name');
+        $sender_name = empty($sender_name) ?
+            'Admin' : $sender_name;
+
+        wp_mail(
+            $to,
+            $template['header'],
+            $template['message'],
+            [
+                'Content-type: text/html; charset=utf-8',
+                'From: '.$sender_name.' <'.$sender_email.'>'
+            ]
+        );
+
+        return $this;
 
     }
 

@@ -27,6 +27,14 @@ class ErrorsList
         '-3' => [
             'message' => '%1$s cannot be less than %2$d.',
             'code' => -2
+        ],
+        '-4' => [
+            'message' => '%1$s must be %2$s.',
+            'code' => -4
+        ],
+        '-5' => [
+            'message' => '%1$s not found.',
+            'code' => -5
         ]
     ];
 

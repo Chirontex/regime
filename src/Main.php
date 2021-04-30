@@ -323,7 +323,8 @@ final class Main extends PointOfEntry
             $this->url,
             [
                 'forms' => $this->forms_table_props,
-                'mails' => $this->mails_table_props
+                'mails' => $this->mails_table_props,
+                'settings' => $this->settings_table_props
             ]
         );
 
