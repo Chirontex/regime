@@ -574,6 +574,10 @@ final class FormsHandler extends GlobalHandler
 
                 if (!empty($userdata)) {
 
+                    if (isset(
+                        $userdata['user_pass']
+                    )) $userdata['user_pass'] = wp_hash_password($userdata['user_pass']);
+
                     if ($this->wpdb->update(
                         $this->wpdb->prefix.'users',
                         $userdata,
@@ -610,7 +614,8 @@ final class FormsHandler extends GlobalHandler
                     esc_html__('Изменения сохранены!', 'regime')
                 );
 
-                if (!empty($form['action'])) $this->setAction($form['action']);
+                if (!empty($form['action']) &&
+                    isset($userdata['user_pass'])) $this->setAction($form['action']);
 
             }
 
