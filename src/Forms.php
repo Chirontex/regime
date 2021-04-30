@@ -15,7 +15,7 @@ final class Forms extends AdminPage
 {
 
     /**
-     * @var \Regime\Models\Tables\FormsTable $table
+     * @var Regime\Models\Tables\FormsTable $table
      * Table object.
      * @since 0.5.6
      */

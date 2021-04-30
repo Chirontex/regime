@@ -51,12 +51,25 @@ final class Main extends PointOfEntry
     protected $menus_table_props;
 
     /**
+     * @var TableProps 0.8.5 $settings_table_props
+     * Settings table properties container.
+     * @since 0.8.5
+     */
+    protected $settings_table_props;
+
+    /**
      * @since 0.0.3
      */
     protected function init() : self
     {
 
         $this->admin_pages_dir = $this->path.'admin/';
+
+        $this->settings_table_props = new TableProps('regime_settings');
+
+        $this->settings_table_props
+            ->setField('key', 'VARCHAR(255) NOT NULL')
+            ->setField('value', 'LONGTEXT');
 
         $this->forms_table_props = new TableProps('regime_forms');
 
@@ -85,6 +98,7 @@ final class Main extends PointOfEntry
                 ->formsInit()
                 ->mailsInit()
                 ->menusInit()
+                ->settingsInit()
                 ->submenuRemove();
 
         }
@@ -223,6 +237,34 @@ final class Main extends PointOfEntry
             $this->url,
             $container,
             $this->menus_table_props
+        );
+
+        return $this;
+
+    }
+
+    /**
+     * Initialize settings admin page.
+     * @since 0.8.5
+     * 
+     * @return $this
+     */
+    protected function settingsInit() : self
+    {
+
+        $container = new AdminMenuPage(
+            $this->admin_pages_dir.'settings.php',
+            file_get_contents($this->path.$this->icons_path.'settings.svg').
+            ' '.esc_html__('Общие настройки', 'regime'),
+            'Общие настройки',
+            'regime-settings'
+        );
+
+        new Settings(
+            $this->path,
+            $this->url,
+            $container,
+            $this->settings_table_props
         );
 
         return $this;
