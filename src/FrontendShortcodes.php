@@ -244,12 +244,13 @@ final class FrontendShortcodes extends GlobalHandler
                             if ($fields[$field_id]['key'] ===
                                 'user_pass') {
 
-                                if ($form['type'] !==
-                                    'profile') $field .= ' required="true">'.PHP_EOL;
+                                if ($form['type'] ===
+                                    'profile') $field .= '>'.PHP_EOL;
+                                else $field .= ' required="true">'.PHP_EOL;
 
                             } else $field .= ' required="true">'.PHP_EOL;
                         
-                        }
+                        } else $field .= '>'.PHP_EOL;
 
                         if ($type ===
                             'textarea') {
