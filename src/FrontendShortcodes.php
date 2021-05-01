@@ -92,9 +92,9 @@ final class FrontendShortcodes extends GlobalHandler
 <form action="" method="post" id="regimeForm_restore">
     <?php wp_nonce_field('regimeForm-restore', 'regimeForm-restore-wpnp') ?>
     <div id="regimeFormField_user_email_container">
-        <p><label id="regimeFormField_user_email_label" for="regimeFormField_user_email">
+        <div><label id="regimeFormField_user_email_label" for="regimeFormField_user_email">
             <?= esc_html__('Пожалуйста, введите ваш e-mail:', 'regime') ?>
-        </label></p>
+        </label></div>
         <input type="email" name="regimeFormField_user_email" id="regimeFormField_user_email" placeholder="<?= esc_attr__('ваш e-mail', 'regime') ?>" required="true">
     </div>
     <div id="regimeForm_restore_submit" style="margin-top: 1rem;">
@@ -122,9 +122,9 @@ final class FrontendShortcodes extends GlobalHandler
     <input type="hidden" name="regimeFormField_user" value="<?= htmlspecialchars(urldecode($_GET['user'])) ?>" required="true">
     <input type="hidden" name="regimeFormField_user_token" value="<?= htmlspecialchars(urldecode($_GET['token'])) ?>" required="true">
     <div id="regimeFormField_user_password_container">
-        <p><label for="regimeFormField_user_password_label">
+        <div><label for="regimeFormField_user_password_label">
             <?= esc_html__('Введите новый пароль:', 'regime') ?>
-        </label></p>
+        </label></div>
         <input type="password" name="regimeFormField_user_password" id="regimeFormField_user_password" placeholder="<?= esc_attr__('новый пароль', 'regime') ?>" required="true">
     </div>
     <div id="regimeForm_newpass_submit" style="margin-top: 1rem;">
@@ -177,7 +177,9 @@ final class FrontendShortcodes extends GlobalHandler
                             $type !== 'radio') {
 
 ?>
-        <p><label for="regimeFormField_<?= $field_id ?>" id="regimeFormField_<?= $field_id ?>_label"><?= $fields[$field_id]['label'] ?></label></p>
+        <div>
+            <label for="regimeFormField_<?= $field_id ?>" id="regimeFormField_<?= $field_id ?>_label"><?= $fields[$field_id]['label'] ?></label>
+        </div>
 <?php
 
                         }
