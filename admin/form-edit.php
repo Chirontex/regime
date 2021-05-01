@@ -112,6 +112,7 @@ if (isset($_GET['fid']) &&
                     <tr>
                         <th></th>
                         <th></th>
+                        <th><?= esc_html__('Тип', 'regime') ?></th>
                         <th><?= esc_html__('Плейсхолдер', 'regime') ?></th>
                         <th><?= esc_html__('Лейбл', 'regime') ?></th>
                         <th><?= esc_html__('Ключ', 'regime') ?></th>
@@ -155,6 +156,16 @@ if (isset($_GET['fid']) &&
                     <div id="regimeFieldEdit_value_block" class="mb-3" hidden="true">
                         <label for="regimeFieldEdit_value" class="form-label">
                             <?= esc_html__('Значение по умолчанию:', 'regime') ?>
+                        </label>
+                    </div>
+                    <div id="regimeFieldEdit_min_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_min" class="form-label">
+                            <?= esc_html__('Минимальное значение:', 'regime') ?>
+                        </label>
+                    </div>
+                    <div id="regimeFieldEdit_max_block" class="mb-3" hidden="true">
+                        <label for="regimeFieldEdit_max" class="form-label">
+                            <?= esc_html__('Максимальное значение:', 'regime') ?>
                         </label>
                     </div>
                     <div id="regimeFieldEdit_options_block" class="mb-3" hidden="true">

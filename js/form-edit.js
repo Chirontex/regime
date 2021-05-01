@@ -15,7 +15,9 @@ document.regimeFormEdit = {
         'strict',
         'checked',
         'required',
-        'css'
+        'css',
+        'min',
+        'max'
     ],
     action: '',
     fieldsCount: 0,
@@ -59,6 +61,13 @@ document.regimeFormEdit = {
             if (type == 'select') field.multiple = false;
 
             if (type == 'datalist') field.strict = false;
+
+            if (type == 'date' ||
+                type == 'number')
+            {
+                field.min = '';
+                field.max = '';
+            }
             
             field.placeholder = placeholder;
 
@@ -96,6 +105,17 @@ document.regimeFormEdit = {
                 'document.regimeFormEdit.methods.fieldMove(\''+fieldId+'\');'
             ));
 
+            const typeCell = document.createElement('td');
+            typeCell.setAttribute('id', fieldId+'_type');
+            typeCell.setAttribute(
+                'onclick',
+                'document.regimeFormEdit.methods.fieldEditingOpen(\''
+                    +fieldId+'\');'
+            );
+            typeCell.innerHTML = type;
+
+            row.appendChild(typeCell);
+
             let prop;
 
             for (let i = 0; i < document.regimeFormEdit.fieldProps.length; i++)
@@ -105,7 +125,9 @@ document.regimeFormEdit = {
                 if (prop == 'options' ||
                     prop == 'multiple' ||
                     prop == 'strict' ||
-                    prop == 'css') continue;
+                    prop == 'css' ||
+                    prop == 'min' ||
+                    prop == 'max') continue;
 
                 row.appendChild(
                     document.regimeFormEdit.methods.propCellRender(
@@ -189,6 +211,13 @@ document.regimeFormEdit = {
                 methods.modalInputRender(fieldId, 'value');
             }
 
+            if (type == 'date' ||
+                type == 'number')
+            {
+                methods.modalInputRender(fieldId, 'min');
+                methods.modalInputRender(fieldId, 'max');
+            }
+
             if (type == 'select' ||
                 type == 'datalist') methods.modalInputRender(fieldId, 'options');
 
@@ -210,6 +239,7 @@ document.regimeFormEdit = {
             if (block.hasAttribute('hidden')) block.removeAttribute('hidden');
 
             let value = field[prop];
+            value = value == undefined ? '' : value;
 
             if (prop == 'options') value = value.join(';\r');
 

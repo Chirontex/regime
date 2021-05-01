@@ -229,6 +229,17 @@ final class FrontendShortcodes extends GlobalHandler
                         
                         }
 
+                        if ($type === 'date' ||
+                            $type === 'number') {
+
+                            if (!empty($fields[$field_id]['min'])) $field .= ' min="'.
+                                    htmlspecialchars($fields[$field_id]['min']).'"';
+
+                            if (!empty($fields[$field_id]['max'])) $field .= ' max="'.
+                                    htmlspecialchars($fields[$field_id]['max']).'"';
+
+                        }
+
                         if ($form['type'] === 'profile' &&
                             ($type === 'checkbox' ||
                             $type === 'radio')) {
