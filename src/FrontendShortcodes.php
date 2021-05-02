@@ -110,15 +110,11 @@ final class FrontendShortcodes extends GlobalHandler
                             isset($_GET['token'])) {
 
                             ob_start();
-
-                            $action = explode('?', $_SERVER['REQUEST_URI']);
-                            $action = $action[0];
                             
 
 ?>
 <form action="" method="post" id="regimeForm_newpass">
     <?php wp_nonce_field('regimeForm-newpass', 'regimeForm-newpass-wpnp') ?>
-    <input type="hidden" name="regimeFormField_action" value="<?= htmlspecialchars($action) ?>" required="true">
     <input type="hidden" name="regimeFormField_user" value="<?= htmlspecialchars(urldecode($_GET['user'])) ?>" required="true">
     <input type="hidden" name="regimeFormField_user_token" value="<?= htmlspecialchars(urldecode($_GET['token'])) ?>" required="true">
     <div id="regimeFormField_user_password_container">

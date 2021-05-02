@@ -5,6 +5,7 @@
 namespace Regime;
 
 use Regime\Traits\Noticer;
+use Regime\Models\Relocator;
 use Regime\Models\Tables\FormsTable;
 use Regime\Models\Tables\MailsTable;
 use Regime\Models\Tables\SettingsTable;
@@ -194,8 +195,8 @@ final class FormsHandler extends GlobalHandler
                     if (isset($userdata['user_email'])) $this
                         ->sendMail($userdata['user_email'], 'registration');
                     
-                    if (!empty($form['action'])) $this
-                        ->setAction($form['action']);
+                    if (!empty($form['action'])) new Relocator($form['action']);
+                    
                 }
 
             }
@@ -292,7 +293,7 @@ final class FormsHandler extends GlobalHandler
                     
                     wp_set_current_user($sign->ID);
 
-                    if (!empty($form['action'])) $this->setAction($form['action']);
+                    if (!empty($form['action'])) new Relocator($form['action']);
                 
                 }
 
@@ -428,15 +429,11 @@ final class FormsHandler extends GlobalHandler
                         esc_html__('Не удалось обновить пароль. Попробуйте ещё раз.', 'regime')
                     );
                     else {
-                        
-                        $this->notice(
-                            'success',
-                            esc_html__('Пароль успешно обновлён! Сейчас вы будете перенаправлены на', 'regime').' '.
-                            '<a href="'.site_url($_POST['regimeFormField_action']).'">'.
-                            esc_html__('страницу авторизации.', 'regime').'</a>'
-                        );
 
-                        $this->setAction((string)$_POST['regimeFormField_action'], 2000, false);
+                        $action = explode('?', $_SERVER['REQUEST_URI']);
+                        $action = $action[0];
+
+                        new Relocator($action);
                 
                     }
 
@@ -579,13 +576,12 @@ final class FormsHandler extends GlobalHandler
 
                 }
 
-                $this->notice(
-                    'success',
-                    esc_html__('Изменения сохранены!', 'regime')
-                );
-
                 if (!empty($form['action']) &&
-                    isset($userdata['user_pass'])) $this->setAction($form['action']);
+                    isset($userdata['user_pass'])) new Relocator($form['action']);
+                else $this->notice(
+                        'success',
+                        esc_html__('Изменения сохранены!', 'regime')
+                );
 
             }
 
@@ -828,58 +824,6 @@ final class FormsHandler extends GlobalHandler
                 $this->notice_container['type'],
                 $this->notice_container['text']
             ).$content;
-
-        }, 100);
-
-        return $this;
-
-    }
-
-    /**
-     * Set redirect action.
-     * @since 0.7.2
-     * 
-     * @param string $uri
-     * Target URI.
-     * 
-     * @return $this
-     */
-    protected function setAction(string $uri, int $timeout = 0, bool $content_hide = true) : self
-    {
-
-        if ($timeout < 0) $timeout = 0;
-
-        $this->action_timeout = $timeout;
-
-        $this->action_uri = $uri;
-
-        $this->action_container = [
-            'uri' => $uri,
-            'timeout' => $timeout,
-            'hide' => $content_hide
-        ];
-
-        add_filter('the_content', function($content) {
-
-            ob_start();
-
-?>
-<script>
-setTimeout(
-    function() 
-    {
-        window.location.replace('<?= site_url($this->action_container['uri']) ?>')
-    },
-    <?= $this->action_container['timeout'] ?>
-);
-</script>
-<?php
-
-            $output = ob_get_clean();
-
-            if (!$this->action_container['hide']) $output .= $content;
-
-            return $output;
 
         }, 100);
 
