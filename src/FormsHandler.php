@@ -112,35 +112,27 @@ final class FormsHandler extends GlobalHandler
                     if ($type !== 'reset') {
 
                         if ($type ===
-                            'checkbox') $userdata[$props['key']] = isset(
-                                $_POST['regimeFormField_'.$field_id]
-                            ) ? 'true' : 'false';
-                        else {
+                            'radio') $value =
+                                (string)$_POST['regimeFormField_'.$type.'_'.$props['key']];
+                        else $value = (string)$_POST['regimeFormField_'.$field_id];
 
-                            if ($type ===
-                                'radio') $value =
-                                    (string)$_POST['regimeFormField_'.$type.'_'.$props['key']];
-                            else $value = (string)$_POST['regimeFormField_'.$field_id];
+                        if ($type === 'datalist' &&
+                            $props['strict'] &&
+                            array_search($value, $props['options']) ===
+                                false) {
 
-                            if ($type === 'datalist' &&
-                                $props['strict'] &&
-                                array_search($value, $props['options']) ===
-                                    false) {
+                            $this->notice(
+                                'danger',
+                                esc_html__('Поле', 'regime').
+                                    ' "'.$props['label'].'" '.
+                                    esc_html__('заполнено некорректно.')
+                            );
 
-                                $this->notice(
-                                    'danger',
-                                    esc_html__('Поле', 'regime').
-                                        ' "'.$props['label'].'" '.
-                                        esc_html__('заполнено некорректно.')
-                                );
+                            return;
 
-                                return;
-
-                            }
-                            
-                            $userdata[$props['key']] = $value;
-                        
                         }
+                        
+                        $userdata[$props['key']] = $value;
 
                     }
 
@@ -196,7 +188,7 @@ final class FormsHandler extends GlobalHandler
                         ->sendMail($userdata['user_email'], 'registration');
                     
                     if (!empty($form['action'])) new Relocator($form['action']);
-                    
+
                 }
 
             }
@@ -503,35 +495,27 @@ final class FormsHandler extends GlobalHandler
 
                         if ($type !== 'reset') {
 
-                            if ($type ===
-                                'checkbox') $meta[$props['key']] = isset(
-                                    $_POST['regimeFormField_'.$field_id]
-                                ) ? 'true' : 'false';
-                            else {
+                            if ($type === 'radio') $value =
+                                (string)$_POST['regimeFormField_'.$type.'_'.$props['key']];
+                            else $value = (string)$_POST['regimeFormField_'.$field_id];
 
-                                if ($type === 'radio') $value =
-                                    (string)$_POST['regimeFormField_'.$type.'_'.$props['key']];
-                                else $value = (string)$_POST['regimeFormField_'.$field_id];
+                            if ($type === 'datalist' &&
+                                $props['strict'] &&
+                                array_search($value, $props['options']) ===
+                                    false) {
 
-                                if ($type === 'datalist' &&
-                                    $props['strict'] &&
-                                    array_search($value, $props['options']) ===
-                                        false) {
+                                $this->notice(
+                                    'danger',
+                                    esc_html__('Поле', 'regime').
+                                        ' "'.$props['label'].'" '.
+                                        esc_html__('заполнено некорректно.')
+                                );
 
-                                    $this->notice(
-                                        'danger',
-                                        esc_html__('Поле', 'regime').
-                                            ' "'.$props['label'].'" '.
-                                            esc_html__('заполнено некорректно.')
-                                    );
+                                return;
 
-                                    return;
-
-                                }
-                                
-                                $meta[$props['key']] = $value;
-                            
                             }
+                            
+                            $meta[$props['key']] = $value;
 
                         }
 
