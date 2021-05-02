@@ -89,6 +89,7 @@ final class FrontendShortcodes extends GlobalHandler
                             ob_start();
 
 ?>
+<?= apply_filters('regime-front-notice', '') ?>
 <form action="" method="post" id="regimeForm_restore">
     <?php wp_nonce_field('regimeForm-restore', 'regimeForm-restore-wpnp') ?>
     <div id="regimeFormField_user_email_container">
@@ -113,6 +114,7 @@ final class FrontendShortcodes extends GlobalHandler
                             
 
 ?>
+<?= apply_filters('regime-front-notice', '') ?>
 <form action="" method="post" id="regimeForm_newpass">
     <?php wp_nonce_field('regimeForm-newpass', 'regimeForm-newpass-wpnp') ?>
     <input type="hidden" name="regimeFormField_user" value="<?= htmlspecialchars(urldecode($_GET['user'])) ?>" required="true">
@@ -152,6 +154,7 @@ final class FrontendShortcodes extends GlobalHandler
                     ob_start();
 
 ?>
+<?= apply_filters('regime-front-notice', '') ?>
 <form action="" method="post" id="regimeForm_<?= $id ?>">
     <input type="hidden" name="regimeFormField_formId" value="<?= $id ?>">
 <?php

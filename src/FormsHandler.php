@@ -802,12 +802,12 @@ final class FormsHandler extends GlobalHandler
             'text' => $text
         ];
 
-        add_filter('the_content', function($content) {
+        add_filter('regime-front-notice', function() {
 
             return $this->standartNotice(
                 $this->notice_container['type'],
                 $this->notice_container['text']
-            ).$content;
+            );
 
         }, 100);
 
