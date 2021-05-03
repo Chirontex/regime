@@ -84,9 +84,11 @@ final class FrontendShortcodes extends GlobalHandler
 
                     } elseif ($form['type'] === 'authorization') {
 
-                        if ($_GET['regime'] === 'restore') {
+                        if (isset($_GET['regime'])) {
 
-                            ob_start();
+                            if ($_GET['regime'] === 'restore') {
+
+                                ob_start();
 
 ?>
 <?= apply_filters('regime-front-notice', '') ?>
@@ -104,13 +106,13 @@ final class FrontendShortcodes extends GlobalHandler
 </form>
 <?php
 
-                            return ob_get_clean();
+                                return ob_get_clean();
 
-                        } elseif ($_GET['regime'] === 'newpass' &&
-                            isset($_GET['user']) &&
-                            isset($_GET['token'])) {
+                            } elseif ($_GET['regime'] === 'newpass' &&
+                                isset($_GET['user']) &&
+                                isset($_GET['token'])) {
 
-                            ob_start();
+                                ob_start();
                             
 
 ?>
@@ -131,7 +133,9 @@ final class FrontendShortcodes extends GlobalHandler
 </form>
 <?php
 
-                            return ob_get_clean();
+                                return ob_get_clean();
+
+                            }
 
                         }
 
@@ -207,7 +211,9 @@ final class FrontendShortcodes extends GlobalHandler
                             $field_id.'_datalist"';
 
                         if ($tag !== 'button' &&
-                            $tag !== 'select') $field .= ' placeholder="'.
+                            $tag !== 'select' &&
+                            $type !== 'radio' &&
+                            $type !== 'checkbox') $field .= ' placeholder="'.
                             htmlspecialchars($fields[$field_id]['placeholder']).'"';
 
                         if ($type !== 'select' &&
@@ -222,7 +228,10 @@ final class FrontendShortcodes extends GlobalHandler
                                 'user_pass') $field .= ' value="'.htmlspecialchars($user->get(
                                     $fields[$field_id]['key']
                             )).'"';
-                            elseif (!empty(
+                            elseif (isset($_POST['regimeFormField_'.$field_id]) &&
+                                $type !== 'checkbox' &&
+                                $type !== 'radio') $field .= ' value="'.htmlspecialchars($_POST['regimeFormField_'.$field_id]).'"';
+                            elseif (isset(
                                 $fields[$field_id]['value']
                             )) $field .= ' value="'.htmlspecialchars($fields[$field_id]['value']).'"';
                         
@@ -231,22 +240,41 @@ final class FrontendShortcodes extends GlobalHandler
                         if ($type === 'date' ||
                             $type === 'number') {
 
-                            if (!empty($fields[$field_id]['min'])) $field .= ' min="'.
+                            if (isset($fields[$field_id]['min'])) $field .= ' min="'.
                                     htmlspecialchars($fields[$field_id]['min']).'"';
 
-                            if (!empty($fields[$field_id]['max'])) $field .= ' max="'.
+                            if (isset($fields[$field_id]['max'])) $field .= ' max="'.
                                     htmlspecialchars($fields[$field_id]['max']).'"';
 
                         }
 
-                        if ($form['type'] === 'profile' &&
-                            ($type === 'checkbox' ||
-                            $type === 'radio')) {
-                            
-                            if ($user->get($fields[$field_id]['key']) ===
-                            $fields[$field_id]['value']) $field .= ' checked="true"';
-                            
-                        } elseif ($fields[$field_id]['checked'] === true) $field .= ' checked="true"';
+                        if ($type === 'checkbox' ||
+                            $type === 'radio') {
+
+                            if ($form['type'] === 'profile') {
+
+                                if ($user->get($fields[$field_id]['key']) ===
+                                    $fields[$field_id]['value']) $field .= ' checked="true"';
+
+                            } else {
+
+                                if (isset(
+                                    $_POST['regimeFormField_radio_'.$fields[$field_id]['key']]
+                                )) {
+
+                                    if ($_POST['regimeFormField_radio_'.$fields[$field_id]['key']] ===
+                                        $fields[$field_id]['value']) $field .= ' checked="true"';
+
+                                } elseif (isset($_POST['regimeFormField_'.$field_id])) {
+
+                                    if ($_POST['regimeFormField_'.$field_id] ===
+                                        $fields[$field_id]['value']) $field .= ' checked="true"';
+
+                                } elseif ($fields[$field_id]['checked'] === true) $field .= ' checked="true"';
+
+                            }
+
+                        }
 
                         if ($fields[$field_id]['bound'] ||
                             $fields[$field_id]['required']) {
@@ -267,13 +295,17 @@ final class FrontendShortcodes extends GlobalHandler
 
                             if ($form['type'] ===
                                 'profile') $field .= htmlspecialchars($user->get($fields[$field_id]['key'])).PHP_EOL;
-                            elseif (!empty($fields[$field_id]['value'])) $field .= htmlspecialchars($fields[$field_id]['value']).PHP_EOL;
+                            elseif (isset(
+                                $_POST['regimeFormField_'.$field_id]
+                            )) $field .= htmlspecialchars($_POST['regimeFormField_'.$field_id]).PHP_EOL;
+                            elseif (isset(
+                                $fields[$field_id]['value']
+                            )) $field .= htmlspecialchars($fields[$field_id]['value']).PHP_EOL;
                                 
                             $field .= '</textarea>'.PHP_EOL;
                             
-                        }
-                        elseif ($type ===
-                            'reset') $field .= htmlspecialchars($fields[$field_id]['placeholder']).PHP_EOL.'</button>'.PHP_EOL;
+                        } elseif ($type === 'reset') $field .=
+                            htmlspecialchars($fields[$field_id]['placeholder']).PHP_EOL.'</button>'.PHP_EOL;
 
                         if ($type === 'select' ||
                             $type === 'datalist') {
@@ -295,6 +327,9 @@ final class FrontendShortcodes extends GlobalHandler
 
                                 if ($form['type'] ===
                                     'profile') $selected = $user->get($fields[$field_id]['key']);
+                                elseif (isset(
+                                    $_POST['regimeFormField_'.$field_id]
+                                )) $selected = $_POST['regimeFormField_'.$field_id];
                                 else $selected = $fields[$field_id]['value'];
                                 
 
