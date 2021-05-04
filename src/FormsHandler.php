@@ -125,10 +125,104 @@ final class FormsHandler extends GlobalHandler
                                 'danger',
                                 esc_html__('Поле', 'regime').
                                     ' "'.$props['label'].'" '.
-                                    esc_html__('заполнено некорректно.')
+                                    esc_html__('заполнено некорректно.', 'regime')
                             );
 
                             return;
+
+                        } elseif ($type === 'date' ||
+                            $type === 'number') {
+
+                            $min = $props['min'];
+                            $max = $props['max'];
+
+                            if ($type === 'date') {
+
+                                $value = strtotime($value);
+
+                                if (!empty($min)) {
+                                    
+                                    $min = strtotime($min);
+
+                                    if ($value < $min) {
+
+                                        $this->notice(
+                                            'danger',
+                                            esc_html__('Значение поля', 'regime').
+                                                ' "'.$props['label'].'" '.
+                                                esc_html__('раньше допустимого диапазона дат.', 'regime')
+                                        );
+
+                                        return;
+
+                                    }
+                                
+                                }
+
+                                if (!empty($max)) {
+                                    
+                                    $max = strtotime($max);
+
+                                    if ($value > $max) {
+
+                                        $this->notice(
+                                            'danger',
+                                            esc_html__('Значение поля', 'regime').
+                                                ' "'.$props['label'].'" '.
+                                                esc_html__('позже допустимого диапазона дат.', 'regime')
+                                        );
+
+                                        return;
+
+                                    }
+                                
+                                }
+
+                                $value = date("Y-m-d", $value);
+
+                            } elseif ($type === 'number') {
+
+                                $value = (int)$value;
+
+                                if (!empty($min)) {
+                                    
+                                    $min = (int)$min;
+
+                                    if ($value < $min) {
+
+                                        $this->notice(
+                                            'danger',
+                                            esc_html__('Значение поля', 'regime').
+                                                ' "'.$props['label'].'" '.
+                                                esc_html__('меньше допустимого минимального значения.', 'regime')
+                                        );
+
+                                        return;
+
+                                    }
+                                
+                                }
+
+                                if (!empty($max)) {
+                                    
+                                    $max = (int)$max;
+
+                                    if ($value > $max) {
+
+                                        $this->notice(
+                                            'danger',
+                                            esc_html__('Значение поля', 'regime').
+                                                ' "'.$props['label'].'" '.
+                                                esc_html__('больше допустимого максимального значения.', 'regime')
+                                        );
+
+                                        return;
+
+                                    }
+                                
+                                }
+
+                            }
 
                         }
                         
@@ -512,6 +606,100 @@ final class FormsHandler extends GlobalHandler
                                 );
 
                                 return;
+
+                            } elseif ($type === 'date' ||
+                                $type === 'number') {
+
+                                $min = $props['min'];
+                                $max = $props['max'];
+
+                                if ($type === 'date') {
+
+                                    $value = strtotime($value);
+
+                                    if (!empty($min)) {
+                                        
+                                        $min = strtotime($min);
+
+                                        if ($value < $min) {
+
+                                            $this->notice(
+                                                'danger',
+                                                esc_html__('Значение поля', 'regime').
+                                                    ' "'.$props['label'].'" '.
+                                                    esc_html__('раньше допустимого диапазона дат.', 'regime')
+                                            );
+
+                                            return;
+
+                                        }
+                                    
+                                    }
+
+                                    if (!empty($max)) {
+                                        
+                                        $max = strtotime($max);
+
+                                        if ($value > $max) {
+
+                                            $this->notice(
+                                                'danger',
+                                                esc_html__('Значение поля', 'regime').
+                                                    ' "'.$props['label'].'" '.
+                                                    esc_html__('позже допустимого диапазона дат.', 'regime')
+                                            );
+
+                                            return;
+
+                                        }
+                                    
+                                    }
+
+                                    $value = date("Y-m-d", $value);
+
+                                } elseif ($type === 'number') {
+
+                                    $value = (int)$value;
+
+                                    if (!empty($min)) {
+                                        
+                                        $min = (int)$min;
+
+                                        if ($value < $min) {
+
+                                            $this->notice(
+                                                'danger',
+                                                esc_html__('Значение поля', 'regime').
+                                                    ' "'.$props['label'].'" '.
+                                                    esc_html__('меньше допустимого минимального значения.', 'regime')
+                                            );
+
+                                            return;
+
+                                        }
+                                    
+                                    }
+
+                                    if (!empty($max)) {
+                                        
+                                        $max = (int)$max;
+
+                                        if ($value > $max) {
+
+                                            $this->notice(
+                                                'danger',
+                                                esc_html__('Значение поля', 'regime').
+                                                    ' "'.$props['label'].'" '.
+                                                    esc_html__('больше допустимого максимального значения.', 'regime')
+                                            );
+
+                                            return;
+
+                                        }
+                                    
+                                    }
+
+                                }
 
                             }
                             
