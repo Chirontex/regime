@@ -1,4 +1,4 @@
-# Regime 0.9.5
+# Regime 0.9.6
 
 ## TODO
 
