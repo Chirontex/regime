@@ -114,7 +114,11 @@ final class FormsHandler extends GlobalHandler
                         if ($type ===
                             'radio') $value =
                                 (string)$_POST['regimeFormField_'.$type.'_'.$props['key']];
-                        else $value = (string)$_POST['regimeFormField_'.$field_id];
+                        else $value = $_POST['regimeFormField_'.$field_id];
+
+                        if ($type === 'select' &&
+                            $props['multiple']) $value = serialize($value);
+                        else $value = (string)$value;
 
                         if ($type === 'datalist' &&
                             $props['strict'] &&
@@ -596,7 +600,11 @@ final class FormsHandler extends GlobalHandler
 
                             if ($type === 'radio') $value =
                                 (string)$_POST['regimeFormField_'.$type.'_'.$props['key']];
-                            else $value = (string)$_POST['regimeFormField_'.$field_id];
+                            else $value = $_POST['regimeFormField_'.$field_id];
+
+                            if ($type === 'select' &&
+                                $props['multiple']) $value = serialize($value);
+                            else $value = (string)$value;
 
                             if ($type === 'datalist' &&
                                 $props['strict'] &&

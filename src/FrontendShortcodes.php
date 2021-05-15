@@ -203,6 +203,13 @@ final class FrontendShortcodes extends GlobalHandler
 
                         if ($type === 'radio') $field .= ' name="regimeFormField_'.
                             $type.'_'.$fields[$field_id]['key'].'"';
+                        elseif ($type === 'select' && $fields[$field_id]['multiple']) {
+
+                            $field .= ' name="regimeFormField_'.$field_id.'[]"';
+                            $field .= ' multiple="true"';
+                            $field .= ' size="5"';
+
+                        }
                         else $field .= ' name="regimeFormField_'.$field_id.'"';
 
                         $field .= ' class="'.$fields[$field_id]['css'].'"';
@@ -331,15 +338,31 @@ final class FrontendShortcodes extends GlobalHandler
                                     $_POST['regimeFormField_'.$field_id]
                                 )) $selected = $_POST['regimeFormField_'.$field_id];
                                 else $selected = $fields[$field_id]['value'];
-                                
 
-                                $field .= '<option value="'.$value.'"'.
-                                    ($value === $selected &&
-                                        $type === 'select' ?
-                                            ' selected="true"': ''
-                                    ).'>'.($type === 'select' ?
-                                            $value.'</option>' :
-                                            '').PHP_EOL;
+                                if ($type === 'select' &&
+                                    $fields[$field_id]['multiple']) {
+
+                                    if (!is_array($selected)) $selected = unserialize($selected);
+
+                                    if (!is_array($selected)) $selected = [$selected];
+
+                                    $field .= '<option value="'.$value.'"'.
+                                        (array_search($value, $selected) === false ?
+                                            '' : ' selected="true"').'>'.$value.
+                                            '</option>'.PHP_EOL;
+
+                                } else {
+
+                                    $field .= '<option value="'.$value.'"'.
+                                        ($value === $selected &&
+                                            $type === 'select' ?
+                                                ' selected="true"': ''
+                                        ).'>'.($type === 'select' ?
+                                                $value.'</option>' :
+                                                '').PHP_EOL;
+
+                                }
+
 
                             }
 
