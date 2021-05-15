@@ -281,12 +281,10 @@ final class FormsHandler extends GlobalHandler
                     if (isset($userdata['user_email'])) $this
                         ->sendMail($userdata['user_email'], 'registration');
 
-                    $credentials = [
+                    wp_signon([
                         'user_login' => $userdata['user_login'],
                         'user_password' => $userdata['user_pass']
-                    ];
-
-                    wp_signon($credentials);
+                    ]);
                     
                     if (!empty($form['action'])) new Relocator($form['action']);
 
