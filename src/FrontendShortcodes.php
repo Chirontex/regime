@@ -209,8 +209,7 @@ final class FrontendShortcodes extends GlobalHandler
                             $field .= ' multiple="true"';
                             $field .= ' size="5"';
 
-                        }
-                        else $field .= ' name="regimeFormField_'.$field_id.'"';
+                        } else $field .= ' name="regimeFormField_'.$field_id.'"';
 
                         $field .= ' class="'.$fields[$field_id]['css'].'"';
 
